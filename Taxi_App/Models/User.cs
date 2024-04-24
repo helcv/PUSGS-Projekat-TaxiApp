@@ -14,4 +14,6 @@ public class User
     public DateOnly DateOfBirth { get; set; }
     public string Address { get; set; }
     public string PhotoUrl { get; set; }
+    public EVerificationStatus VerificationStatus { get; set; }
+    public EUserType Role { get; set; }
 }

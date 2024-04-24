@@ -6,6 +6,7 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<RegisterDto, User>();
+        CreateMap<RegisterDto, User>().ReverseMap();
+        CreateMap<VerificationDto, User>().ReverseMap();
     }
 }

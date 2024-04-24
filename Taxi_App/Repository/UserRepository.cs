@@ -13,11 +13,10 @@ public class UserRepository : IUserRepository
     }
 
     public async Task<bool> Register(User user)
-    {
-        _context.Users.Add(user);
-
+    { 
         try
         {   
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -39,5 +38,40 @@ public class UserRepository : IUserRepository
     public async Task<User> GetUserByUsername(string username)
     {
         return await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+    }
+
+    public async Task<User> AcceptVerification(int id)
+    {
+        try
+        {
+            var user = await _context.Users.FindAsync(id);
+            user.VerificationStatus = EVerificationStatus.ACCEPTED;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<User> DenyVerification(int id)
+    {
+        try
+        {
+            var user = await _context.Users.FindAsync(id);
+            user.VerificationStatus = EVerificationStatus.DENIED;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<User> GetUserById(int id)
+    {
+        return await _context.Users.FindAsync(id);
     }
 }
