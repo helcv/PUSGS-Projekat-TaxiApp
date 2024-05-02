@@ -8,5 +8,6 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<RegisterDto, User>().ReverseMap();
         CreateMap<VerificationDto, User>().ReverseMap();
+        CreateMap<UserUpdateDto, User>().ReverseMap();
     }
 }

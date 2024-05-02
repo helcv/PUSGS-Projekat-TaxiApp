@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Taxi_App;
 
@@ -25,7 +26,7 @@ public class AccountController : BaseApiController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
-        if (await _userRepo.UsernameExists(registerDto.Username)) return BadRequest("Username is taken");
+        if (await _userRepo.UsernameExists(registerDto.Username.ToLower())) return BadRequest("Username is taken");
 
         if (await _userRepo.EmailExists(registerDto.Email)) return BadRequest("Email is taken");
 
@@ -55,6 +56,7 @@ public class AccountController : BaseApiController
         if (await _userRepo.Register(user))
             return new UserDto{
                 Username = user.Username,
+                Email = user.Email,
                 Token = _tokenService.CreateToken(user),
                 VerificationStatus = user.VerificationStatus.ToString()
             };
@@ -65,9 +67,9 @@ public class AccountController : BaseApiController
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await _userRepo.GetUserByUsername(loginDto.Username);
+        var user = await _userRepo.GetUserByEmailAsync(loginDto.Email);
 
-        if (user == null) return Unauthorized("Invalid username");
+        if (user == null) return Unauthorized("Invalid email");
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
@@ -80,6 +82,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             Username = user.Username,
+            Email = user.Email,
             Token = _tokenService.CreateToken(user),
             VerificationStatus = user.VerificationStatus.ToString()
         };
@@ -89,7 +92,7 @@ public class AccountController : BaseApiController
     [Authorize(Roles = "ADMIN")]
     public async Task<ActionResult> AcceptVerification(int id)
     {
-        var user = await _userRepo.GetUserById(id);
+        var user = await _userRepo.GetUserByIdAsync(id);
 
         if (user == null) return NotFound("User doen't exist!");
 
@@ -108,7 +111,7 @@ public class AccountController : BaseApiController
     [Authorize(Roles = "ADMIN")]
     public async Task<ActionResult> DenyVerification(int id)
     {
-        var user = await _userRepo.GetUserById(id);
+        var user = await _userRepo.GetUserByIdAsync(id);
 
         if (user == null) return NotFound("User doen't exist!");
 
@@ -121,5 +124,22 @@ public class AccountController : BaseApiController
         var userToReturn = _mapper.Map<VerificationDto>(user);
 
         return Ok(userToReturn);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto)
+    {
+        var user = await _userRepo.GetUserByUsernameAsync(User.GetUsername());
+
+        if (user == null) return NotFound();
+
+        if(await _userRepo.UpdateCheckEmail(userUpdateDto.Email, user.Id)) return BadRequest("Email already exist!");
+        if(await _userRepo.UpdateCheckUsername(userUpdateDto.Username, user.Id)) return BadRequest("Username already exist!");
+
+        _mapper.Map(userUpdateDto, user);
+
+        if (await _userRepo.SaveAllAsync()) return NoContent();
+
+        return BadRequest("Failed to update user");
     }
 }
