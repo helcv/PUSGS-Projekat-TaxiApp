@@ -5,18 +5,21 @@ using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Taxi_App;
 
 public class AccountController : BaseApiController
 {
+    private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepo;
     private readonly ITokenService _tokenService;
     private readonly IEmailService _emailService;
 
-    public AccountController(IMapper mapper, IUserRepository userRepo, ITokenService tokenService, IEmailService emailService)
+    public AccountController(UserManager<User> userManager, IMapper mapper, IUserRepository userRepo, ITokenService tokenService, IEmailService emailService)
     {
+        _userManager = userManager;
         _mapper = mapper;
         _userRepo = userRepo;
         _tokenService = tokenService;
@@ -41,27 +44,32 @@ public class AccountController : BaseApiController
 
         var user = _mapper.Map<User>(registerDto);
 
-        using var hmac = new HMACSHA512();
-
-        user.Username = registerDto.Username.ToLower();
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
-        user.PasswordSalt = hmac.Key;
-        user.Role = (EUserType)Enum.Parse(typeof(EUserType), registerDto.Role.ToUpper());
-
-        if (user.Role == EUserType.DRIVER)
-            user.VerificationStatus = EVerificationStatus.IN_PROGRESS;
-        else
-            user.VerificationStatus = EVerificationStatus.ACCEPTED;
-
-        if (await _userRepo.Register(user))
-            return new UserDto{
-                Username = user.Username,
-                Email = user.Email,
-                Token = _tokenService.CreateToken(user),
-                VerificationStatus = user.VerificationStatus.ToString()
-            };
+        user.UserName = registerDto.Username.ToLower();
+    
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
         
-        return BadRequest("Something went wrong");
+        if (!result.Succeeded) return BadRequest(result.Errors);
+
+        if (registerDto.Role == "Driver")
+        {
+            user.VerificationStatus = EVerificationStatus.IN_PROGRESS;
+            var roleResult = await _userManager.AddToRoleAsync(user, "Driver");
+        }
+        else
+        {
+            user.VerificationStatus = EVerificationStatus.ACCEPTED;
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+        }
+
+        return new UserDto
+        {
+            Username = user.UserName,
+            Email = user.Email,
+            Token = await _tokenService.CreateToken(user),
+            VerificationStatus = user.VerificationStatus.ToString()
+        };
+        
+        
     }
 
     [HttpPost("login")]
@@ -71,25 +79,21 @@ public class AccountController : BaseApiController
 
         if (user == null) return Unauthorized("Invalid email");
 
-        using var hmac = new HMACSHA512(user.PasswordSalt);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+        var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if( user.PasswordHash[i] != computedHash[i])    return Unauthorized("Invalid password!");
-        }
+        if(!result) return Unauthorized("Invalid password");
 
         return new UserDto
         {
-            Username = user.Username,
+            Username = user.UserName,
             Email = user.Email,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateToken(user),
             VerificationStatus = user.VerificationStatus.ToString()
         };
     }
 
     [HttpPatch("accept-verification/{id}")]
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> AcceptVerification(int id)
     {
         var user = await _userRepo.GetUserByIdAsync(id);
@@ -108,7 +112,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPatch("deny-verification/{id}")]
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> DenyVerification(int id)
     {
         var user = await _userRepo.GetUserByIdAsync(id);
@@ -127,6 +131,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPut]
+    [Authorize]
     public async Task<ActionResult> UpdateUser(UserUpdateDto userUpdateDto)
     {
         var user = await _userRepo.GetUserByUsernameAsync(User.GetUsername());

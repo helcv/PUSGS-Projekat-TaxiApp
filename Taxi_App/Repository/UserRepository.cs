@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UsernameExists(string username)
     {
-        return await _context.Users.AnyAsync(x=> x.Username == username);
+        return await _context.Users.AnyAsync(x=> x.UserName == username);
     }
     public async Task<bool> EmailExists(string email)
     {
@@ -37,7 +37,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUserByUsernameAsync(string username)
     {
-        return await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+        return await _context.Users.SingleOrDefaultAsync(x => x.UserName == username);
     }
 
     public async Task<User> GetUserByEmailAsync(string email)
@@ -92,7 +92,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UpdateCheckUsername(string username, int currentId)
     {
-        return await _context.Users.AnyAsync(u => u.Username == username && u.Id != currentId);
+        return await _context.Users.AnyAsync(u => u.UserName == username && u.Id != currentId);
     }
 
     public async Task<bool> UpdateCheckEmail(string email, int currentId)

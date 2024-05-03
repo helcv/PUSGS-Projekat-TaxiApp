@@ -1,0 +1,47 @@
+[
+    {
+      "name": "Blankenship",
+      "lastname": " Acosta",
+      "username": "Blankenship",
+      "email": "blankenshipacosta@coriander.com",
+      "DateOfBirth": "1980-08-01",
+      "address": "395 Cranberry Street, Nelson, Arizona, 9350",
+      "photourl": "https://randomuser.me/api/portraits/man/69.jpg"
+    },
+    {
+      "name": "Roxanne",
+      "lastname": " George",
+      "username": "Roxanne",
+      "email": "roxannegeorge@coriander.com",
+      "DateOfBirth": "1952-03-14",
+      "address": "734 Russell Street, Rote, Guam, 8942",
+      "photourl": "https://randomuser.me/api/portraits/man/92.jpg"
+    },
+    {
+      "name": "Hurley",
+      "lastname": " Hawkins",
+      "username": "Hurley",
+      "email": "hurleyhawkins@coriander.com",
+      "DateOfBirth": "1999-06-10",
+      "address": "297 Doone Court, Mulberry, West Virginia, 8982",
+      "photourl": "https://randomuser.me/api/portraits/man/75.jpg"
+    },
+    {
+      "name": "Gaines",
+      "lastname": " Dean",
+      "username": "Gaines",
+      "email": "gainesdean@coriander.com",
+      "DateOfBirth": "1995-09-02",
+      "address": "717 Onderdonk Avenue, Draper, South Carolina, 3318",
+      "photourl": "https://randomuser.me/api/portraits/man/87.jpg"
+    },
+    {
+      "name": "Buchanan",
+      "lastname": " Castillo",
+      "username": "Buchanan",
+      "email": "buchanancastillo@coriander.com",
+      "DateOfBirth": "1955-09-13",
+      "address": "380 Virginia Place, Tyro, Northern Mariana Islands, 1289",
+      "photourl": "https://randomuser.me/api/portraits/man/84.jpg"
+    }
+  ]
