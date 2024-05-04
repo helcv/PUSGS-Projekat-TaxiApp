@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlite(builder.Configur
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IDistanceService, DistanceService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddIdentityCore<User>(opt => 
