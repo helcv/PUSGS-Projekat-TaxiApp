@@ -27,7 +27,7 @@ builder.Services.AddIdentityCore<User>(opt =>
     
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -36,7 +36,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
+    })
+    .AddGoogle(googleOptions =>{
+        googleOptions.ClientId = builder.Configuration["GoogleClientId"];
+        googleOptions.ClientSecret = builder.Configuration["GoogleClientSecret"];
     });
+
+
 
 var app = builder.Build();
 
