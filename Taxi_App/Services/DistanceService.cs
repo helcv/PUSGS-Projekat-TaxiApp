@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 
 namespace Taxi_App;
@@ -13,7 +12,7 @@ public class DistanceService : IDistanceService
         _config = config;
     }
 
-    public async Task<string> GetDistanceAndDuration(string from, string to)
+    public async Task<List<string>> GetDistanceAndDuration(string from, string to)
     {
         var baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
 
@@ -46,14 +45,35 @@ public class DistanceService : IDistanceService
                 {
                     //catch the results from the api
                     var responseContent = await response.Content.ReadAsStringAsync();
+                    var retList = new List<string>();
 
                     JObject parsedData = JObject.Parse(responseContent);
+
+                    string err = (string)parsedData["rows"][0]["elements"][0]["status"];
+
+                    if (err == "ZERO_RESULTS" || err == "NOT_FOUND")
+                    {
+                        retList.Add(err);
+                        return retList;
+                    }
 
                     string distanceText = (string)parsedData["rows"][0]["elements"][0]["distance"]["text"];
                     string durationText = (string)parsedData["rows"][0]["elements"][0]["duration"]["text"];
 
-                    return (distanceText + "\n" + durationText);
+                    retList.Add(distanceText);
+                    retList.Add(durationText);
+
+                    return retList;
                 }
         }
+    } 
+
+    public float CalculatePrice(string distance)
+    {
+        var distanceParts = distance.Split(' ');
+        float distanceKm = float.Parse(distanceParts[0]);
+        float totalPrice = (float)Math.Round(distanceKm * 0.75, 3);
+
+        return totalPrice;  //price in €
     }
 }

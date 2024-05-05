@@ -12,4 +12,6 @@ public class User : IdentityUser<int>
     public string PhotoUrl { get; set; }
     public EVerificationStatus VerificationStatus { get; set; }
     public ICollection<AppUserRole> UserRoles { get; set; }
+    public ICollection<Ride> CreatedRides { get; set; } = new List<Ride>();
+    public ICollection<Ride> AcceptedRides { get; set; } = new List<Ride>();
 }

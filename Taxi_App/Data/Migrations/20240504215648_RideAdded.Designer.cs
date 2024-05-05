@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Taxi_App;
 
@@ -10,9 +11,11 @@ using Taxi_App;
 namespace Taxi_App.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240504215648_RideAdded")]
+    partial class RideAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.18");
@@ -149,10 +152,7 @@ namespace Taxi_App.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Distance")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("DriverId")
+                    b.Property<bool>("Accepted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FinalAddress")
@@ -164,21 +164,13 @@ namespace Taxi_App.Data.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("RideDuration")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("StartAddress")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
 
                     b.HasIndex("UserId");
 
@@ -325,17 +317,11 @@ namespace Taxi_App.Data.Migrations
 
             modelBuilder.Entity("Taxi_App.Ride", b =>
                 {
-                    b.HasOne("Taxi_App.User", "Driver")
-                        .WithMany("AcceptedRides")
-                        .HasForeignKey("DriverId");
-
                     b.HasOne("Taxi_App.User", "User")
-                        .WithMany("CreatedRides")
+                        .WithMany("Rides")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Driver");
 
                     b.Navigation("User");
                 });
@@ -347,9 +333,7 @@ namespace Taxi_App.Data.Migrations
 
             modelBuilder.Entity("Taxi_App.User", b =>
                 {
-                    b.Navigation("AcceptedRides");
-
-                    b.Navigation("CreatedRides");
+                    b.Navigation("Rides");
 
                     b.Navigation("UserRoles");
                 });

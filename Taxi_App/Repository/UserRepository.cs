@@ -12,20 +12,6 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<bool> Register(User user)
-    { 
-        try
-        {   
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     public async Task<bool> UsernameExists(string username)
     {
         return await _context.Users.AnyAsync(x=> x.UserName == username);

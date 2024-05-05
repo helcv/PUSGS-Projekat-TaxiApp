@@ -204,6 +204,7 @@ public class AccountController : BaseApiController
     {
         var user = await _userRepo.GetUserByUsernameAsync(User.GetUsername());
 
+        if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
         if (user == null) return NotFound();
 
         if(await _userRepo.UpdateCheckEmail(userUpdateDto.Email, user.Id)) return BadRequest("Email already exist!");

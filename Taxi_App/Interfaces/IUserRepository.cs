@@ -2,7 +2,6 @@
 
 public interface IUserRepository
 {
-    Task<bool> Register(User user);
     Task<bool> UsernameExists(string username); 
     Task<bool> EmailExists(string email);
     Task<bool> UpdateCheckUsername(string username, int currentId); 

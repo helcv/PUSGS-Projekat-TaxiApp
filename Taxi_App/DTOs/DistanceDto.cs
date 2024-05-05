@@ -2,6 +2,6 @@
 
 public class DistanceDto
 {
-    public string From { get; set; }
-    public string To { get; set; }
+    public string StartAddress { get; set; }
+    public string FinalAddress { get; set; }
 }
