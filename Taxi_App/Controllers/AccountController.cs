@@ -160,43 +160,6 @@ public class AccountController : BaseApiController
         };
     }
 
-    [HttpPatch("accept-verification/{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> AcceptVerification(int id)
-    {
-        var user = await _userRepo.GetUserByIdAsync(id);
-
-        if (user == null) return NotFound("User doen't exist!");
-
-        if (user.VerificationStatus != EVerificationStatus.IN_PROGRESS) return BadRequest("Can't change verification anymore!");
-
-        var userVerified = await _userRepo.AcceptVerification(user.Id);
-        
-        await _emailService.SendEmail(user.Email, userVerified.VerificationStatus.ToString());
-
-        var userToReturn = _mapper.Map<VerificationDto>(user);
-
-        return Ok(userToReturn);
-    }
-
-    [HttpPatch("deny-verification/{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> DenyVerification(int id)
-    {
-        var user = await _userRepo.GetUserByIdAsync(id);
-
-        if (user == null) return NotFound("User doen't exist!");
-
-        if (user.VerificationStatus != EVerificationStatus.IN_PROGRESS) return BadRequest("Can't change verification anymore!");
-
-        var userVerified = await _userRepo.DenyVerification(user.Id);
-        
-        await _emailService.SendEmail(user.Email, userVerified.VerificationStatus.ToString());
-
-        var userToReturn = _mapper.Map<VerificationDto>(user);
-
-        return Ok(userToReturn);
-    }
 
     [HttpPut]
     [Authorize]

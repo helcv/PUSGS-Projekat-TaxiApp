@@ -2,6 +2,6 @@
 
 public interface IDistanceService
 {
-    Task<List<string>> GetDistanceAndDuration(string from, string to);
+    Task<DistanceDto> GetDistanceAndDuration(AddressDto addressDto);
     float CalculatePrice(string distance);
 }

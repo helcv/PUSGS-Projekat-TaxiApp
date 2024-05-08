@@ -8,4 +8,5 @@ public interface IRideRepository
     Task<Ride> RequestRide(int id);
     Task<Ride> AcceptRide(int id, int userId);
     Task<Ride> GetRideById(int id);
+    Task<List<Ride>> GetRidesForUser(int id);
 }

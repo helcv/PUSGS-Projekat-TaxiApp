@@ -2,6 +2,7 @@
 
 public class DistanceDto
 {
-    public string StartAddress { get; set; }
-    public string FinalAddress { get; set; }
+    public string Distance { get; set; }
+    public string Duration { get; set; }
+    public bool Failed { get; set; }
 }

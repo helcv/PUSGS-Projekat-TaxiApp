@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Taxi_App;
 
@@ -54,5 +55,15 @@ public class RideRepository : IRideRepository
     public async Task<Ride> GetRideById(int id)
     {
         return await _context.Rides.FindAsync(id);
+    }
+
+    public async Task<List<Ride>> GetRidesForUser(int id)   //add to user controller
+    {
+        var driverRides = await _context.Rides
+            .Where(r => r.UserId == id)
+            .Where(r => r.Status != ERideStatus.PROCESSING)
+            .ToListAsync();
+
+        return driverRides;
     }
 }

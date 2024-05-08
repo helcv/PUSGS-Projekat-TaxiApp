@@ -21,28 +21,28 @@ public class RideController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<string>> GetDistance(DistanceDto distanceDto)
+    public async Task<ActionResult<string>> GetDistance(AddressDto addressDto)
     {
-        var data = await _distanceService.GetDistanceAndDuration(distanceDto.StartAddress, distanceDto.FinalAddress);
-        return data[0];
+        var distanceAndDuration = await _distanceService.GetDistanceAndDuration(addressDto);
+        return distanceAndDuration.Distance;
     }
 
     [HttpPost]
     [Authorize(Roles = "User, Admin")]
-    public async Task<ActionResult<RideDto>> CreateRide(DistanceDto distanceDto)
+    public async Task<ActionResult<RideDto>> CreateRide(AddressDto addressDto)
     {
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
-        var ride = _mapper.Map<Ride>(distanceDto);
-        var data = await _distanceService.GetDistanceAndDuration(distanceDto.StartAddress, distanceDto.FinalAddress);
+        var ride = _mapper.Map<Ride>(addressDto);
+        var distanceAndDuration = await _distanceService.GetDistanceAndDuration(addressDto);
 
-        if (data[0] == "ZERO_RESULTS" || data[0] == "NOT_FOUND") return BadRequest("This ride is impossible!");
+        if (distanceAndDuration.Failed == true) return BadRequest("This ride is impossible!");
 
         Random rnd = new Random();
 
         ride.UserId = user.Id;
-        ride.Price = _distanceService.CalculatePrice(data[0]); 
-        ride.Distance = data[0];
-        ride.RideDuration = data[1];
+        ride.Price = _distanceService.CalculatePrice(distanceAndDuration.Distance); 
+        ride.Distance = distanceAndDuration.Distance;
+        ride.RideDuration = distanceAndDuration.Duration;
         ride.PickUpTime = rnd.Next(3, 21);
         ride.Status = ERideStatus.PROCESSING;
 
@@ -88,4 +88,5 @@ public class RideController : BaseApiController
         var rideDto = _mapper.Map<RideDto>(rideAccepted);
         return Ok(rideDto);
     }
+
 }

@@ -12,12 +12,12 @@ public class DistanceService : IDistanceService
         _config = config;
     }
 
-    public async Task<List<string>> GetDistanceAndDuration(string from, string to)
+    public async Task<DistanceDto> GetDistanceAndDuration(AddressDto addressDto)
     {
         var baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
 
-        string[] partsFrom = from.Split(',');
-        string[] partsTo = to.Split(',');
+        string[] partsFrom = addressDto.StartAddress.Split(',');
+        string[] partsTo = addressDto.FinalAddress.Split(',');
         
         string streetNumFrom = partsFrom[0].Trim();
         string streetFrom = partsFrom[1].Trim();
@@ -45,7 +45,8 @@ public class DistanceService : IDistanceService
                 {
                     //catch the results from the api
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var retList = new List<string>();
+                    //var retList = new List<string>();
+                    var distanceAndDuration = new DistanceDto();
 
                     JObject parsedData = JObject.Parse(responseContent);
 
@@ -53,17 +54,23 @@ public class DistanceService : IDistanceService
 
                     if (err == "ZERO_RESULTS" || err == "NOT_FOUND")
                     {
-                        retList.Add(err);
-                        return retList;
+                        //retList.Add(err);
+                        //return retList;
+                        distanceAndDuration.Failed = true;
+                        return distanceAndDuration;
                     }
 
                     string distanceText = (string)parsedData["rows"][0]["elements"][0]["distance"]["text"];
                     string durationText = (string)parsedData["rows"][0]["elements"][0]["duration"]["text"];
 
-                    retList.Add(distanceText);
-                    retList.Add(durationText);
+                    /*retList.Add(distanceText);
+                    retList.Add(durationText);*/
 
-                    return retList;
+                    distanceAndDuration.Distance = distanceText;
+                    distanceAndDuration.Duration = durationText;
+                    distanceAndDuration.Failed = false;
+
+                    return distanceAndDuration;
                 }
         }
     } 
