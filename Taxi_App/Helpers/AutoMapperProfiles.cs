@@ -12,6 +12,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<GoogleRegisterDto, User>().ReverseMap();
         CreateMap<AddressDto, Ride>().ReverseMap();
         CreateMap<Ride, RideDto>().ReverseMap();
+        CreateMap<User, DriverDto>().ReverseMap();
     }
             
 }

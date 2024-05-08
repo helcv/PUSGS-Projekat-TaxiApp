@@ -13,6 +13,11 @@ public class RideRepository : IRideRepository
         _context = context;
     }
 
+    public async Task<List<Ride>> GetAllRidesAsync()
+    {
+        return  await _context.Rides.ToListAsync();
+    }
+
     public async Task<Ride> RequestRide(int id)
     {
         try
