@@ -10,6 +10,7 @@ public class User : IdentityUser<int>
     public DateOnly DateOfBirth { get; set; }
     public string Address { get; set; }
     public string PhotoUrl { get; set; }
+    public bool IsBlocked { get; set; }
     public EVerificationStatus VerificationStatus { get; set; }
     public ICollection<AppUserRole> UserRoles { get; set; }
     public ICollection<Ride> CreatedRides { get; set; } = new List<Ride>();

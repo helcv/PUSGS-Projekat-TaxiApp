@@ -9,6 +9,7 @@ public class Ride
     public float Price { get; set; }
     public int PickUpTime { get; set; }
     public string RideDuration { get; set; }
+    public DateTime StartTime { get; set; }
     public ERideStatus Status { get; set; }
     
     public int UserId { get; set; }

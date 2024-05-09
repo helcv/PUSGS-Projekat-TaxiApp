@@ -13,6 +13,40 @@ public class RideRepository : IRideRepository
         _context = context;
     }
 
+    public async Task<bool> CompleteRide(int id)
+    {
+        try
+        {
+            var ride = await _context.Rides.FindAsync(id);
+            ride.Status = ERideStatus.COMPLETED;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<Ride> GetRideInProgressForUserAsync(int userId)
+    {
+        return await _context.Rides.FirstOrDefaultAsync(r => r.UserId == userId && r.Status == ERideStatus.IN_PROGRESS);
+    }
+
+    public async Task<Ride> GetRideInProgressForDriverAsync(int userId)
+    {
+        return await _context.Rides.FirstOrDefaultAsync(r => r.DriverId == userId && r.Status == ERideStatus.IN_PROGRESS);
+    }
+
+    public async Task<List<Ride>> GetCompletedRidesAsync(int id)
+    {
+        return await _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.DriverId == id).ToListAsync();
+    }
+    public async Task<List<Ride>> GetAllCreatedRidesAsync()
+    {
+        return await _context.Rides.Where(r => r.Status == ERideStatus.CREATED).ToListAsync();
+    }
+
     public async Task<List<Ride>> GetAllRidesAsync()
     {
         return  await _context.Rides.ToListAsync();
@@ -46,7 +80,8 @@ public class RideRepository : IRideRepository
         try
         {
             var ride = await _context.Rides.FindAsync(id);
-            ride.Status = ERideStatus.ACCEPTED;
+            ride.Status = ERideStatus.IN_PROGRESS;
+            ride.StartTime = DateTime.UtcNow;
             ride.DriverId = userId;
             await _context.SaveChangesAsync();
             return ride;

@@ -4,5 +4,6 @@ public enum ERideStatus
 {
     PROCESSING,
     CREATED,
-    ACCEPTED
+    IN_PROGRESS,
+    COMPLETED
 }

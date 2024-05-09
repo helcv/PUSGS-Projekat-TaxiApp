@@ -63,7 +63,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult<List<DriverDto>>> GetAllDrivers()
     {
         var drivers = await _userManager.GetUsersInRoleAsync("Driver");
-        if (drivers == null) return NotFound("There are currently no drivers!");
+        if (drivers.Count() == 0) return NotFound("There are currently no drivers!");
 
         var driversDto = _mapper.Map<List<DriverDto>>(drivers);
 
@@ -74,7 +74,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult<List<RideDto>>> GetAllRides()
     {
         var rides = await _rideRepository.GetAllRidesAsync();
-        if (rides == null) return NotFound("There are currently no rides!");
+        if (rides.Count() == 0) return NotFound("There are currently no rides!");
 
         var ridesDto = _mapper.Map<List<RideDto>>(rides);
 

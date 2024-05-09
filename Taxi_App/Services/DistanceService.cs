@@ -45,7 +45,6 @@ public class DistanceService : IDistanceService
                 {
                     //catch the results from the api
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    //var retList = new List<string>();
                     var distanceAndDuration = new DistanceDto();
 
                     JObject parsedData = JObject.Parse(responseContent);
@@ -54,17 +53,12 @@ public class DistanceService : IDistanceService
 
                     if (err == "ZERO_RESULTS" || err == "NOT_FOUND")
                     {
-                        //retList.Add(err);
-                        //return retList;
                         distanceAndDuration.Failed = true;
                         return distanceAndDuration;
                     }
 
                     string distanceText = (string)parsedData["rows"][0]["elements"][0]["distance"]["text"];
                     string durationText = (string)parsedData["rows"][0]["elements"][0]["duration"]["text"];
-
-                    /*retList.Add(distanceText);
-                    retList.Add(durationText);*/
 
                     distanceAndDuration.Distance = distanceText;
                     distanceAndDuration.Duration = durationText;
@@ -75,6 +69,25 @@ public class DistanceService : IDistanceService
         }
     } 
 
+    public int GetMinutes(string duration)
+    {
+        int minutes;
+        string[] parts = duration.Split(' ');
+
+        if(parts.Length == 4)
+        {
+            minutes = Int32.Parse(parts[0]) * 60 + Int32.Parse(parts[2]);
+            return minutes;
+        }
+        else if(parts.Length == 2)
+        {
+            minutes = Int32.Parse(parts[0]);
+            return minutes;
+        }
+        else
+            return -1;
+    }
+
     public float CalculatePrice(string distance)
     {
         var distanceParts = distance.Split(' ');
@@ -83,4 +96,6 @@ public class DistanceService : IDistanceService
 
         return totalPrice;  //price in €
     }
+
+
 }
