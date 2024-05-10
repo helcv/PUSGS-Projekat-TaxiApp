@@ -72,6 +72,7 @@ public class RideController : BaseApiController
         var ride = await _rideRepository.GetRideById(id);
 
         if (ride == null) return NotFound("Ride doen't exist!");
+        if (ride.UserId != user.Id) return Unauthorized("You can request only your ride!");
 
         if (ride.Status != ERideStatus.PROCESSING) return BadRequest("Can't request this ride anymore!");
 
@@ -141,12 +142,12 @@ public class RideController : BaseApiController
 
     [HttpGet("remaining-time")]
     [Authorize]
-    public async Task<ActionResult<string>> GetRemainingTime()
+    public async Task<ActionResult<TimeDto>> GetRemainingTime()
     {
         //check if user is allowed
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
         if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
-        if (user.IsBlocked == false) return Ok("Ride should be completed.\n You can use app again!");
+        //if (user.IsBlocked == false) return Ok("Ride should be completed.\n You can use app again!");
         var ride = new Ride();
 
         //get specific ride
@@ -167,12 +168,14 @@ public class RideController : BaseApiController
         var rideDuration = TimeSpan.FromMinutes(_distanceService.GetMinutes(ride.RideDuration));
         var remainingTime = pickupDuration + rideDuration - elapsedTime;
         var remainingPickupTime = pickupDuration - elapsedTime; 
-        
-        var retPickup = $"Pickup duration is approximately {remainingPickupTime.Hours} hours, {remainingPickupTime.Minutes } minutes, {remainingPickupTime.Seconds} seconds.";
-        var retRide = $"Ride duration is approximately {remainingTime.Hours} hours, {remainingTime.Minutes } minutes, {remainingTime.Seconds} seconds.";
+    
+        var timeDto = new TimeDto();
 
         if (remainingPickupTime < TimeSpan.Zero)
-            retPickup = "Driver should be on site!\n";
+        {
+            timeDto.Message = "Driver should be on site!";
+            remainingPickupTime = TimeSpan.Zero;
+        }        
 
         if (remainingTime < TimeSpan.Zero)
         {
@@ -194,9 +197,17 @@ public class RideController : BaseApiController
             //and mark ride as completed
             if(await _rideRepository.CompleteRide(ride.Id) == false) return BadRequest("Something went wrong.");
 
-            return Ok("Ride should be completed.\n You can use app again!");
+            timeDto.Message = "Ride should be completed. You can use app again!";
+            return Ok(timeDto);
         }
 
-        return Ok(retPickup + retRide);
+        timeDto.PickUpHours = remainingPickupTime.Hours;
+        timeDto.PickUpMinutes = remainingPickupTime.Minutes;
+        timeDto.PickUpSeconds = remainingPickupTime.Seconds;
+        timeDto.RideHours = remainingTime.Hours;
+        timeDto.RideMinutes = remainingTime.Minutes;
+        timeDto.RideSeconds = remainingTime.Seconds;
+        
+        return Ok(timeDto);
     }
 }
