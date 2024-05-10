@@ -36,6 +36,7 @@ public class RideController : BaseApiController
     {
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
         if (user.IsBlocked == true) return Unauthorized("You are blocked.");
+        if (user == null) return NotFound("User doesn't exist!");
 
         var ride = _mapper.Map<Ride>(addressDto);
         var distanceAndDuration = await _distanceService.GetDistanceAndDuration(addressDto);
@@ -68,6 +69,7 @@ public class RideController : BaseApiController
 
         if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
         if (user.IsBlocked == true) return Unauthorized("You are blocked.");
+        if (user == null) return NotFound("User doen't exist!");
 
         var ride = await _rideRepository.GetRideById(id);
 
@@ -91,7 +93,7 @@ public class RideController : BaseApiController
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user.IsBlocked == true) return Unauthorized("You are blocked.");
-        if (user == null) return NotFound();
+        if (user == null) return NotFound("User doen't exist!");
         if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
 
         var ride = await _rideRepository.GetRideById(id);
@@ -113,8 +115,10 @@ public class RideController : BaseApiController
     public async Task<ActionResult<List<RideDto>>> GetAllCreatedRides()
     {
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
         if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
         if (user.IsBlocked == true) return Unauthorized("You are blocked.");
+        if (user == null) return NotFound("User doen't exist!");
 
         var rides = await _rideRepository.GetAllCreatedRidesAsync();
         if (rides.Count() == 0) return NotFound("There are currently no created rides");
@@ -125,19 +129,28 @@ public class RideController : BaseApiController
     }
 
     [HttpGet("completed-rides")]
-    [Authorize(Roles = "Driver")]
-    public async Task<ActionResult<List<RideDto>>> GetCompletedRides()
+    [Authorize(Roles = "Driver, User")]
+    public async Task<ActionResult<List<CompleteRideDto>>> GetCompletedRides()
     {
         var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
         if (user.VerificationStatus != EVerificationStatus.ACCEPTED) return Unauthorized("You are not verified!");
         if (user.IsBlocked == true) return Unauthorized("You are blocked.");
+        if (user == null) return NotFound("User doen't exist!");
 
-        var rides = await _rideRepository.GetAllCreatedRidesAsync();
-        if (rides.Count() == 0) return NotFound("There are currently completed no rides");
-
-        var ridesDto = _mapper.Map<List<RideDto>>(rides);
-
-        return Ok(ridesDto);
+        if (await _userManager.IsInRoleAsync(user, "Driver"))
+        {
+            var rides = await _rideRepository.GetCompletedRidesForDriverAsync(user.Id);
+            if (rides.Count() == 0) return NotFound("There are currently completed no rides");
+            return Ok(rides);
+            
+        }
+        else
+        {
+            var rides = await _rideRepository.GetCompletedRidesForUserAsync(user.Id);
+            if (rides.Count() == 0) return NotFound("There are currently completed no rides");
+            return Ok(rides);
+        }
     }
 
     [HttpGet("remaining-time")]

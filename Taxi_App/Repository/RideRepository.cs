@@ -38,10 +38,40 @@ public class RideRepository : IRideRepository
         return await _context.Rides.FirstOrDefaultAsync(r => r.DriverId == userId && r.Status == ERideStatus.IN_PROGRESS);
     }
 
-    public async Task<List<Ride>> GetCompletedRidesAsync(int id)
+    public async Task<List<CompleteRideDto>> GetCompletedRidesForDriverAsync(int id)
     {
-        return await _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.DriverId == id).ToListAsync();
+        var ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.DriverId == id);
+
+        return await ridesQuery.Select(r => new CompleteRideDto
+        {
+            StartAddress = r.StartAddress,
+            FinalAddress = r.FinalAddress,
+            Price = r.Price,
+            PickUpTime = r.PickUpTime,
+            Distance = r.Distance,
+            RideDuration = r.RideDuration,
+            Status = "Completed",
+            Username = r.User.UserName
+        }).ToListAsync();
     }
+
+    public async Task<List<CompleteRideDto>> GetCompletedRidesForUserAsync(int id)
+    {
+        var ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.UserId == id);
+
+        return await ridesQuery.Select(r => new CompleteRideDto
+        {
+            StartAddress = r.StartAddress,
+            FinalAddress = r.FinalAddress,
+            Price = r.Price,
+            PickUpTime = r.PickUpTime,
+            Distance = r.Distance,
+            RideDuration = r.RideDuration,
+            Status = "Completed",
+            Username = r.Driver.UserName
+        }).ToListAsync();
+    }
+    
     public async Task<List<Ride>> GetAllCreatedRidesAsync()
     {
         return await _context.Rides.Where(r => r.Status == ERideStatus.CREATED).ToListAsync();

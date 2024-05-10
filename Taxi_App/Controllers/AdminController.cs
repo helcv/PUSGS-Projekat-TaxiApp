@@ -62,7 +62,7 @@ public class AdminController : BaseApiController
     [HttpGet("drivers")]
     public async Task<ActionResult<List<DriverDto>>> GetAllDrivers()
     {
-        var drivers = await _userManager.GetUsersInRoleAsync("Driver");
+        var drivers = await _userRepo.GetDriversWithRates();
         if (drivers.Count() == 0) return NotFound("There are currently no drivers!");
 
         var driversDto = _mapper.Map<List<DriverDto>>(drivers);
@@ -79,5 +79,35 @@ public class AdminController : BaseApiController
         var ridesDto = _mapper.Map<List<RideDto>>(rides);
 
         return Ok(ridesDto);
+    }
+
+    [HttpPatch("block-driver/{username}")]
+    public async Task<ActionResult<BlockDriverDto>> BlockDriver(string username)
+    {
+        var driver = await _userRepo.GetUserByUsernameAsync(username);
+
+        if (driver == null) return NotFound("Driver does not exist!");
+        if (driver.VerificationStatus == EVerificationStatus.IN_PROGRESS) return NotFound("Can not block this driver!");
+        if (driver.IsBlocked == true) return BadRequest("Driver is already blocked!");
+
+        driver = await _userRepo.BlockDriverAsync(username);
+        if (driver == null) return BadRequest("Something went wrong");
+        
+        return Ok(_mapper.Map<BlockDriverDto>(driver));
+    }
+
+    [HttpPatch("unblock-driver/{username}")]
+    public async Task<ActionResult<BlockDriverDto>> UnblockDriver(string username)
+    {
+        var driver = await _userRepo.GetUserByUsernameAsync(username);
+
+        if (driver == null) return NotFound("Driver does not exist!");
+        if (driver.VerificationStatus == EVerificationStatus.IN_PROGRESS) return NotFound("Can not unblock this driver!");
+        if (driver.IsBlocked == false) return BadRequest("Driver is already unblocked!");
+
+        driver = await _userRepo.UnblockDriverAsync(username);
+        if (driver == null) return BadRequest("Something went wrong");
+        
+        return Ok(_mapper.Map<BlockDriverDto>(driver));
     }
 }

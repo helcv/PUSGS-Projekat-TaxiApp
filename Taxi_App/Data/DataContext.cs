@@ -15,6 +15,7 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
     }
     //public DbSet<User> Users { get; set; }
     public DbSet<Ride> Rides { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -42,6 +43,18 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
             .HasOne(u => u.User)
             .WithMany(r => r.CreatedRides)
             .HasForeignKey(r => r.UserId)
+            .IsRequired();
+
+        builder.Entity<User>()
+            .HasMany(r => r.Ratings)
+            .WithOne(r => r.Driver)
+            .HasForeignKey(r => r.DriverId)
+            .IsRequired();
+        
+        builder.Entity<Rating>()
+            .HasOne(u => u.Driver)
+            .WithMany(r => r.Ratings)
+            .HasForeignKey(r => r.DriverId)
             .IsRequired();
     }
 }

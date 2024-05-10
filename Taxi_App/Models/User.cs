@@ -11,8 +11,10 @@ public class User : IdentityUser<int>
     public string Address { get; set; }
     public string PhotoUrl { get; set; }
     public bool IsBlocked { get; set; }
+    public double AvgRate { get; set; }
     public EVerificationStatus VerificationStatus { get; set; }
     public ICollection<AppUserRole> UserRoles { get; set; }
+    public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     public ICollection<Ride> CreatedRides { get; set; } = new List<Ride>();
     public ICollection<Ride> AcceptedRides { get; set; } = new List<Ride>();
 }

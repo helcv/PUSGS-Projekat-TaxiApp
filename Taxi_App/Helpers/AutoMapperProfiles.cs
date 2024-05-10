@@ -13,6 +13,8 @@ public class AutoMapperProfiles : Profile
         CreateMap<AddressDto, Ride>().ReverseMap();
         CreateMap<Ride, RideDto>().ReverseMap();
         CreateMap<User, DriverDto>().ReverseMap();
+        CreateMap<User, BlockDriverDto>().ReverseMap();
+        CreateMap<Rating, RatingDto>().ReverseMap();
     }
             
 }
