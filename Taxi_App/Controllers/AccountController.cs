@@ -18,12 +18,13 @@ public class AccountController : BaseApiController
     private readonly IUserRepository _userRepo;
     private readonly ITokenService _tokenService;
     private readonly IEmailService _emailService;
+    private readonly IPhotoService _photoService;
     private readonly IConfigurationSection _googleCredentials;
 
     public AccountController(UserManager<User> userManager, RoleManager<AppRole> roleManager, 
         IMapper mapper, IUserRepository userRepo, 
         ITokenService tokenService, IEmailService emailService,
-        IConfiguration config)
+        IConfiguration config, IPhotoService photoService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -31,11 +32,13 @@ public class AccountController : BaseApiController
         _userRepo = userRepo;
         _tokenService = tokenService;
         _emailService = emailService;
+        _photoService = photoService;
         _googleCredentials = config.GetSection("GoogleClientId");
     }
 
+
     [HttpPost("register")]
-    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult<UserDto>> Register([FromForm]RegisterDto registerDto)
     {
         if (await _userRepo.UsernameExists(registerDto.Username.ToLower())) return BadRequest("Username is taken");
 
@@ -46,7 +49,8 @@ public class AccountController : BaseApiController
 
         if (registerDto.Role.ToLower() == "admin") return BadRequest("You can not register as admin!");     //check if role is Admin
 
-        if (!roleExist) return BadRequest("Role does not exist!");          //check if role exist
+        if (!roleExist) return BadRequest("Role does not exist!"); //check if role exist
+                
 
         var validationResults = new List<ValidationResult>();
         var isValid = Validator.TryValidateObject(registerDto, new ValidationContext(registerDto), validationResults, true);
@@ -59,11 +63,16 @@ public class AccountController : BaseApiController
 
         var user = _mapper.Map<User>(registerDto);
 
+        var photoResult = await _photoService.AddPhotoAsync(registerDto.Photo);
+        if (photoResult.Error != null) return BadRequest(photoResult.Error.Message);  
+
         user.UserName = registerDto.Username.ToLower();
+        user.PhotoUrl = photoResult.SecureUrl.AbsoluteUri;
     
         var result = await _userManager.CreateAsync(user, registerDto.Password);
-        
         if (!result.Succeeded) return BadRequest(result.Errors);
+
+        
 
         if (registerDto.Role.ToLower() == "driver")                                                   //check role for verification status
         {

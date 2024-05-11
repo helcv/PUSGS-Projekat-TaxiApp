@@ -55,6 +55,7 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
             .HasOne(u => u.Driver)
             .WithMany(r => r.Ratings)
             .HasForeignKey(r => r.DriverId)
+            .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
     }
 }
