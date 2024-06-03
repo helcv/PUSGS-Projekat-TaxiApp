@@ -11,7 +11,7 @@ public class User : IdentityUser<int>
     public string Address { get; set; }
     public string PhotoUrl { get; set; }
     public bool IsBlocked { get; set; }
-    public double AvgRate { get; set; }
+    public double AvgRate { get; set; } = 0;
     public EVerificationStatus VerificationStatus { get; set; }
     public ICollection<AppUserRole> UserRoles { get; set; }
     public ICollection<Rating> Ratings { get; set; } = new List<Rating>();

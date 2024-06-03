@@ -38,39 +38,31 @@ public class RideRepository : IRideRepository
         return await _context.Rides.FirstOrDefaultAsync(r => r.DriverId == userId && r.Status == ERideStatus.IN_PROGRESS);
     }
 
-    public async Task<List<CompleteRideDto>> GetCompletedRidesForDriverAsync(int id)
-    {
-        var ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.DriverId == id);
+    public async Task<List<CompleteRideDto>> GetCompletedRidesAsync(int id, bool isDriver)
+{
+    IQueryable<Ride> ridesQuery;
 
-        return await ridesQuery.Select(r => new CompleteRideDto
-        {
-            StartAddress = r.StartAddress,
-            FinalAddress = r.FinalAddress,
-            Price = r.Price,
-            PickUpTime = r.PickUpTime,
-            Distance = r.Distance,
-            RideDuration = r.RideDuration,
-            Status = "Completed",
-            Username = r.User.UserName
-        }).ToListAsync();
+    if (isDriver)
+    {
+        ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.DriverId == id);
+    }
+    else
+    {
+        ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.UserId == id);
     }
 
-    public async Task<List<CompleteRideDto>> GetCompletedRidesForUserAsync(int id)
+    return await ridesQuery.Select(r => new CompleteRideDto
     {
-        var ridesQuery = _context.Rides.Where(r => r.Status == ERideStatus.COMPLETED && r.UserId == id);
-
-        return await ridesQuery.Select(r => new CompleteRideDto
-        {
-            StartAddress = r.StartAddress,
-            FinalAddress = r.FinalAddress,
-            Price = r.Price,
-            PickUpTime = r.PickUpTime,
-            Distance = r.Distance,
-            RideDuration = r.RideDuration,
-            Status = "Completed",
-            Username = r.Driver.UserName
-        }).ToListAsync();
-    }
+        StartAddress = r.StartAddress,
+        FinalAddress = r.FinalAddress,
+        Price = r.Price,
+        PickUpTime = r.PickUpTime,
+        Distance = r.Distance,
+        RideDuration = r.RideDuration,
+        Status = "Completed",
+        Username = isDriver ? r.User.UserName : r.Driver.UserName
+    }).ToListAsync();
+}
     
     public async Task<List<Ride>> GetAllCreatedRidesAsync()
     {
@@ -82,44 +74,12 @@ public class RideRepository : IRideRepository
         return  await _context.Rides.ToListAsync();
     }
 
-    public async Task<Ride> RequestRide(int id)
-    {
-        try
-        {
-            var ride = await _context.Rides.FindAsync(id);
-            ride.Status = ERideStatus.CREATED;
-            await _context.SaveChangesAsync();
-            return ride;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
     public async Task<Ride> AddRide(Ride ride)
     {
         _context.Rides.Add(ride);
         await _context.SaveChangesAsync();
 
         return ride;
-    }
-
-    public async Task<Ride> AcceptRide(int id, int userId)
-    {
-        try
-        {
-            var ride = await _context.Rides.FindAsync(id);
-            ride.Status = ERideStatus.IN_PROGRESS;
-            ride.StartTime = DateTime.UtcNow;
-            ride.DriverId = userId;
-            await _context.SaveChangesAsync();
-            return ride;
-        }
-        catch
-        {
-            return null;
-        }
     }
 
     public async Task<Ride> GetRideById(int id)
@@ -135,5 +95,10 @@ public class RideRepository : IRideRepository
             .ToListAsync();
 
         return driverRides;
+    }
+
+    public async Task<bool> SaveAllAsync()
+    {
+        return await _context.SaveChangesAsync() > 0;
     }
 }

@@ -9,5 +9,5 @@ public class DriverDto
     public string VerificationStatus { get; set; }
     public double AvgRate { get; set; }
     public bool IsBlocked { get; set; }
-    public ICollection<Rating> Ratings { get; set; }
+    public ICollection<RatingDto> Ratings { get; set; }
 }

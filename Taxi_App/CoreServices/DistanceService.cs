@@ -96,6 +96,4 @@ public class DistanceService : IDistanceService
 
         return totalPrice;  //price in €
     }
-
-
 }
