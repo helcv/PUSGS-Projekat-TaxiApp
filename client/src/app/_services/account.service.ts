@@ -38,6 +38,28 @@ export class AccountService {
     );
   }
 
+  register(model: any){
+    return this.http.post<Token>(this.baseUrl + "account/register", model).pipe(
+      switchMap((response: Token) => {
+        const token = response;
+        if (token) {
+          localStorage.setItem('token', JSON.stringify(token));
+          return this.getUserProfile(token.token).pipe(
+            tap(user => {
+              if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+              }
+            })
+          );
+        }
+        return of(null);
+      }),
+      tap(user => {
+        this.currUserSource.next(user);
+      })
+    )
+  }
+
   logout(){
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -47,7 +69,6 @@ export class AccountService {
   setCurrentUser(user: User){
     this.currUserSource.next(user);
   }
-
 
   private getUserProfile(token: string): Observable<User | null> {
     const headers = new HttpHeaders({
