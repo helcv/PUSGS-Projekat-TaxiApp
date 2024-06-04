@@ -13,11 +13,13 @@ public class AccountService : IAccountService
     private readonly ITokenService _tokenService;
     private readonly IPhotoService _photoService;
     private readonly IConfigurationSection _googleCredentials;
+    private readonly IUserRepository _userRepo;
 
     public AccountService(UserManager<User> userManager,
         IMapper mapper, ITokenService tokenService,
-        IConfiguration config, IPhotoService photoService)
+        IConfiguration config, IPhotoService photoService, IUserRepository userRepo)
     {
+        _userRepo = userRepo;
         _userManager = userManager;
         _mapper = mapper;
         _tokenService = tokenService;
@@ -207,5 +209,29 @@ public class AccountService : IAccountService
         }
 
         return Result.Success<SuccessMessageDto, IEnumerable<string>>(new SuccessMessageDto { Message = "User verification successfully updated."});
+    }
+
+    public async Task<Result<UserDto, string>> GetProfileAsync(int id)
+    {
+        var user = await _userRepo.GetUserByIdAsync(id);
+
+        if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
+        {
+            return Result.Failure<UserDto, string>("You are not verified");
+        }
+        if (user.IsBlocked == true)
+        {
+            return Result.Failure<UserDto, string>("You are blocked");
+        }
+
+        var userDto = new UserDto
+        {
+            Name = user.Name,
+            Username = user.UserName,
+            Lastname = user.Lastname,
+            Email = user.Email
+        };
+
+        return Result.Success<UserDto, string>(userDto);
     }
 }

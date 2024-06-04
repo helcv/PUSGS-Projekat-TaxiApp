@@ -21,6 +21,19 @@ public class AccountController : BaseApiController
         _accountService = accountService;
     }
 
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetProfile()
+    {
+        var currUser = _contextAccessor.HttpContext.User;
+        var currId = currUser.GetUserId();
+
+        var result = await _accountService.GetProfileAsync(currId);
+        if (result.IsFailure) return BadRequest(result.Error);
+        
+        return Ok(result.Value);
+
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromForm]RegisterDto registerDto)
