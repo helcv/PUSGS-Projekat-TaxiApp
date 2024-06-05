@@ -8,9 +8,10 @@ import { authGuard } from './_guards/auth.guard';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { adminGuard } from './_guards/admin.guard';
 import { RidesComponent } from './admin/rides/rides.component';
+import { homeAccessGuard } from './_guards/home-access.guard';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: HomeComponent, canActivate: [homeAccessGuard]},
   {path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
@@ -22,7 +23,7 @@ const routes: Routes = [
       {path: 'rides', component: RidesComponent, canActivate: [adminGuard]}
     ]
   },
-  {path: '**', component: HomeComponent, pathMatch: 'full'}
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({
