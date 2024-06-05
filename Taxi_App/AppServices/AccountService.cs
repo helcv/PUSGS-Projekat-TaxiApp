@@ -229,7 +229,10 @@ public class AccountService : IAccountService
             Name = user.Name,
             Username = user.UserName,
             Lastname = user.Lastname,
-            Email = user.Email
+            Email = user.Email,
+            PhotoUrl = user.PhotoUrl,
+            Age = user.DateOfBirth.CalculateAge(),
+            Address = user.Address
         };
 
         return Result.Success<UserDto, string>(userDto);

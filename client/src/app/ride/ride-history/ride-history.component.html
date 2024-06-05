@@ -1,1 +1,25 @@
-<p>ride-history works!</p>
+<div *ngIf="rides.length > 0">
+    <div *ngFor="let ride of rides">
+      <button type="button" class="btn btn-primary d-block mx-auto w-25" (click)="toggleCollapse(ride.id)">
+        <span class="mr-2">Ride #{{ ride.id }}</span>
+        <i class="fa fa-taxi ms-3" aria-hidden="true"> </i>
+      </button>
+      <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id], 'show': isCollapsed[ride.id]}">
+        <div class="card w-25 mx-auto text-center">
+          <div class="card-body text-center">
+            <p><strong>Start Address:</strong> {{ ride.startAddress }}</p>
+            <p><strong>Final Address:</strong> {{ ride.finalAddress }}</p>
+            <p><strong>Price:</strong> {{ ride.price }} <i class="fa fa-euro"></i></p>
+            <p><strong>Distance:</strong> {{ ride.distance }}</p>
+            <p><strong>Ride Duration:</strong> {{ ride.rideDuration }}</p>
+            <p><strong>Status:</strong> {{ ride.status }}</p>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-25 mx-auto text-center" *ngIf="rides.length == 0">
+      <p>There are currently no completed rides.</p>
+  </div>
+  

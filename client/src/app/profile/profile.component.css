@@ -1,0 +1,39 @@
+
+.profile-card {
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-card .card-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .profile-card .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-card .card-title {
+    margin-bottom: 0;
+  }
+  
+  .profile-card .card-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .profile-card .card-text {
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .custom-bg {
+    background-color: #343A40;
+  }

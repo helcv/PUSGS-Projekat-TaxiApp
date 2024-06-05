@@ -17,6 +17,7 @@ import { CreateRideComponent } from './ride/create-ride/create-ride.component';
 import { RideHistoryComponent } from './ride/ride-history/ride-history.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ToastrModule } from 'ngx-toastr';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ToastrModule } from 'ngx-toastr';
     BsDatepickerModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
-    })
+    }),
+    CollapseModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

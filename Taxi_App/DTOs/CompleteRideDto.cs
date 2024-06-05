@@ -2,6 +2,7 @@
 
 public class CompleteRideDto
 {
+    public int Id { get; set; }
     public string StartAddress { get; set; }
     public string FinalAddress { get; set; }
     public float Price { get; set; }

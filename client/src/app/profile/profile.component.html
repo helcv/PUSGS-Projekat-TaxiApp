@@ -1,3 +1,20 @@
-<div class="ms-2">
-    <p>profile works</p>
-</div>
+<div class="container mt-5" *ngIf="user">
+    <div class="card profile-card">
+      <div class="card-header text-white custom-bg">
+        <h4>Profile</h4>
+      </div>
+      <div class="card-body text-center">
+        <div class="profile-info">
+          <img *ngIf="user.photoUrl" [src]="user.photoUrl" alt="Profile Image" class="profile-image mb-3">
+          <h5 class="card-title">{{ user.name }} {{ user.lastname }}</h5>
+          <div class="text-start mt-4">
+            <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+            <p class="card-text mt-2"><strong>Username:</strong> {{ user.username }}</p>
+            <p class="card-text mt-2"><strong>Adress:</strong> {{ user.address }}</p>
+            <p class="card-text mt-2"><strong>Age:</strong> {{ user.age }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -53,6 +53,7 @@ public class RideRepository : IRideRepository
 
     return await ridesQuery.Select(r => new CompleteRideDto
     {
+        Id = r.Id,
         StartAddress = r.StartAddress,
         FinalAddress = r.FinalAddress,
         Price = r.Price,
