@@ -94,10 +94,25 @@ export class AccountService {
     this.currUserSource.next(user);
   }
   
-
   getDecodedToken(token: string) {
     return JSON.parse(atob(token.split('.')[1]))
   }
+
+  getAuthHeaders(): HttpHeaders {
+    const token = this.getAuthToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  private getAuthToken(): string | null {
+      const tokenString = localStorage.getItem('token');
+      if (tokenString) {
+        const tokenObject = JSON.parse(tokenString);
+        return tokenObject.token;
+      }
+      return null;
+    }
 
   private getUserProfile(token: string): Observable<User | null> {
     const headers = new HttpHeaders({

@@ -1,25 +1,47 @@
-<div *ngIf="rides.length > 0">
-    <div *ngFor="let ride of rides">
-      <button type="button" class="btn btn-primary d-block mx-auto w-25" (click)="toggleCollapse(ride.id)">
-        <span class="mr-2">Ride #{{ ride.id }}</span>
-        <i class="fa fa-taxi ms-3" aria-hidden="true"> </i>
-      </button>
-      <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id], 'show': isCollapsed[ride.id]}">
-        <div class="card w-25 mx-auto text-center">
-          <div class="card-body text-center">
-            <p><strong>Start Address:</strong> {{ ride.startAddress }}</p>
-            <p><strong>Final Address:</strong> {{ ride.finalAddress }}</p>
-            <p><strong>Price:</strong> {{ ride.price }} <i class="fa fa-euro"></i></p>
-            <p><strong>Distance:</strong> {{ ride.distance }}</p>
-            <p><strong>Ride Duration:</strong> {{ ride.rideDuration }}</p>
-            <p><strong>Status:</strong> {{ ride.status }}</p>
-            <hr>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+      <div *ngIf="rides.length > 0">
+        <div *ngFor="let ride of rides">
+          <button type="button" class="btn btn-primary d-block mb-3 w-100" (click)="toggleCollapse(ride.id)">
+            <span class="mr-2">Ride #{{ ride.id }}</span>
+            <i class="fa fa-taxi ms-3" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="w-100 mx-auto text-center" *ngIf="rides.length == 0">
+        <p>There are currently no completed rides.</p>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div *ngIf="activeRide === null && rides.length != 0">
+        <div class="w-100 mx-auto text-center fs-2">
+          <p>Select a ride to view details.</p>
+        </div>
+      </div>
+      <div *ngFor="let ride of rides">
+        <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id] && ride.id !== activeRide, 'show': isCollapsed[ride.id] || ride.id === activeRide}">
+          <h3 class="text-center mb-4 fs-3">Ride Information</h3>
+          <div class="card w-75 mx-auto mb-3 text-center">
+            <div class="card-body">
+              <h5 class="card-title">Start Address:</h5>
+              <p>{{ ride.startAddress }}</p>
+              <h5 class="card-title">Final Address:</h5>
+              <p>{{ ride.finalAddress }}</p>
+              <h5 class="card-title">Price:</h5>
+              <p>{{ ride.price }} <i class="fa fa-euro"></i></p>
+              <h5 class="card-title">Distance:</h5>
+              <p>{{ ride.distance }}</p>
+              <h5 class="card-title">Ride Duration:</h5>
+              <p>{{ ride.rideDuration }}</p>
+              <h5 class="card-title">Status:</h5>
+              <p>{{ ride.status }}</p>
+              <hr>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="w-25 mx-auto text-center" *ngIf="rides.length == 0">
-      <p>There are currently no completed rides.</p>
-  </div>
-  
+</div>

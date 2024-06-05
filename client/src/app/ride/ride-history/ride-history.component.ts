@@ -10,6 +10,7 @@ import { RideService } from 'src/app/_services/ride.service';
 export class RideHistoryComponent implements OnInit {
   rides: Ride[] = [];
   isCollapsed: { [key: number]: boolean } = {};
+  activeRide: number | null = null;
 
   constructor(private rideService: RideService) {}
 
@@ -29,6 +30,11 @@ export class RideHistoryComponent implements OnInit {
   }
 
   toggleCollapse(rideId: number): void {
+    if (this.activeRide === rideId) {
+      this.activeRide = null;
+    } else {
+      this.activeRide = rideId; 
+    }
     this.isCollapsed[rideId] = !this.isCollapsed[rideId];
   }
 }
