@@ -1,1 +1,59 @@
-<p>admin-panel works!</p>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <h2 class="text-center mb-4">Drivers List</h2>
+    </div>
+  </div>
+  <div class="row justify-content-center" *ngIf="drivers.length > 0; else noDrivers">
+    <div class="col-md-8 mb-4" *ngFor="let driver of drivers">
+      <div class="card mx-auto">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">{{ driver.name }} {{ driver.lastname }} #{{ driver.id }}</h5>
+            <div>
+              <button class="btn btn-danger mt-2 ms-2" (click)="denyVerification(driver.id)" [disabled]="driver.verificationStatus !== 'IN_PROGRESS'">Deny Verification</button>
+              <button class="btn btn-success me-2 ms-2" (click)="acceptVerification(driver.id)" [disabled]="driver.verificationStatus !== 'IN_PROGRESS'">Accept Verification</button>
+              <button class="btn btn-primary" (click)="toggleDriverDetails(driver.id)">
+                {{ activeDriverId === driver.id ? 'Hide Details' : 'Show Details' }}
+              </button>
+            </div>
+          </div>
+          <div [id]="'collapse' + driver.id" class="collapse mt-3" [ngClass]="{'show': activeDriverId === driver.id}">
+            <p><i class="fa fa-user me-2"></i> {{ driver.username }}</p>
+            <p><i class="fa fa-check me-2"></i> {{ driver.verificationStatus }}</p>
+            <p><i class="fa fa-star me-2"></i> {{ driver.avgRate }}</p>
+            <p><i class="fa fa-ban me-2"></i> {{ driver.isBlocked ? 'Yes' : 'No' }}</p>
+            <button class="btn btn-danger me-2" (click)="blockDriver(driver.id)" [disabled]="driver.isBlocked || driver.verificationStatus == 'IN_PROGRESS'">Block</button>
+            <button class="btn btn-warning" (click)="unBlockDriver(driver.id)" [disabled]="!driver.isBlocked">Unblock</button>
+            <button class="btn btn-secondary mt-2 ms-2" (click)="toggleRatings(driver.id)">
+              {{ showRatingsId === driver.id ? 'Hide Ratings' : 'Show Ratings' }}
+            </button>
+            <div [id]="'ratings' + driver.id" class="collapse mt-3" [ngClass]="{'show': showRatingsId === driver.id}">
+              <h6>Ratings:</h6>
+              <ul class="list-unstyled">
+                <li *ngFor="let rating of driver.ratings" class="rating-item p-2 mb-2 border rounded">
+                  <div>
+                    <ng-container *ngFor="let star of [].constructor(rating.stars); let i = index">
+                      <i class="fa fa-star text-warning me-1 ms-2" aria-hidden="true"></i>
+                    </ng-container>
+                  </div>
+                  <div class="mt-2">
+                      <i class="fa fa-user ms-2 me-2"></i> {{ rating.userUsername }}
+                  </div>
+                  <div>
+                    <strong class="ms-2">Message:</strong> {{ rating.message }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noDrivers>
+    <div class="col-12">
+      <p class="text-center">There are currently no drivers.</p>
+    </div>
+  </ng-template>
+</div>

@@ -5,7 +5,7 @@
       </div>
       <div class="card-body text-center">
         <div class="profile-info">
-          <img *ngIf="user.photoUrl" [src]="user.photoUrl" alt="Profile Image" class="profile-image mb-3">
+          <img [src]="user.photoUrl ? user.photoUrl : 'assets/user.jpg'" alt="Profile Image" class="profile-image mb-3">
           <h5 class="card-title">{{ user.name }} {{ user.lastname }}</h5>
           <div class="text-start mt-4">
             <p class="card-text"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>

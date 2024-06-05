@@ -65,7 +65,6 @@ public class UserRepository : IUserRepository
 
         var driversWithRates = await _context.Users
             .Where(u => drivers.Contains(u))
-            .Where(u => u.VerificationStatus != EVerificationStatus.IN_PROGRESS)
             .Include(u => u.Ratings)
             .ToListAsync();
 
