@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Driver } from '../_models/driver';
 import { AccountService } from './account.service';
+import { Ride } from '../_models/ride';
+import { DetailedRide } from '../_models/detailedRide';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,11 @@ export class AdminService {
     const headers = this.accountService.getAuthHeaders();
     return this.http.get<Driver[]>(this.baseUrl + 'admin/drivers', {headers})
   }
+
+  getRides(): Observable<DetailedRide[]>{
+    const headers = this.accountService.getAuthHeaders();
+    return this.http.get<DetailedRide[]>(this.baseUrl + 'admin/rides', {headers})
+   }
 
   blockDriver(driverId: number): Observable<any> {
     const headers = this.accountService.getAuthHeaders();

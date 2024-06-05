@@ -74,11 +74,11 @@ public class AdminService : IAdminService
         return driversDto;
     }
 
-    public async Task<IEnumerable<RideDto>> GetAllRidesAsync()
+    public async Task<IEnumerable<DetailedRideDto>> GetAllRidesAsync()
     {
         var rides = await _rideRepository.GetAllRidesAsync();
 
-        var ridesDto = _mapper.Map<List<RideDto>>(rides);
+        var ridesDto = _mapper.Map<List<DetailedRideDto>>(rides);
 
         return ridesDto;
     }

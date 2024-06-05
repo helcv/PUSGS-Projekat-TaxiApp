@@ -1,6 +1,6 @@
 ﻿namespace Taxi_App;
 
-public class RideDto
+public class DetailedRideDto
 {
     public int Id { get; set; }
     public string StartAddress { get; set; }
@@ -10,4 +10,6 @@ public class RideDto
     public string Distance { get; set; }
     public string RideDuration { get; set; }
     public string Status { get; set; }
+    public string UserUsername { get; set; }
+    public string DriverUsername { get; set; }
 }

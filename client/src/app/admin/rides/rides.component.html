@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+      <div *ngIf="rides.length > 0">
+        <div *ngFor="let ride of rides">
+          <button type="button" class="btn btn-primary d-block mb-3 w-100" (click)="toggleCollapse(ride.id)">
+            <span class="mr-2">Ride #{{ ride.id }}</span>
+            <i class="fa fa-taxi ms-3" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="w-100 mx-auto text-center" *ngIf="rides.length == 0">
+        <p>There are currently no completed rides.</p>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div *ngIf="activeRide === null && rides.length != 0">
+        <div class="w-100 mx-auto text-center fs-2">
+          <p>Select a ride to view details.</p>
+        </div>
+      </div>
+      <div *ngFor="let ride of rides">
+        <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id] && ride.id !== activeRide, 'show': isCollapsed[ride.id] || ride.id === activeRide}">
+          <h3 class="text-center mb-4 fs-3">Ride Information</h3>
+          <div class="card w-75 mx-auto mb-3 text-center ride-info">
+            <div class="card-body">
+              <div class="info-section">
+                <h5 class="info-label">Driver:</h5>
+                <p class="info-value">{{ ride.driverUsername }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Customer:</h5>
+                <p class="info-value">{{ ride.userUsername }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Start Address:</h5>
+                <p class="info-value">{{ ride.startAddress }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Final Address:</h5>
+                <p class="info-value">{{ ride.finalAddress }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Price:</h5>
+                <p class="info-value">{{ ride.price }} <i class="fa fa-euro"></i></p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Distance:</h5>
+                <p class="info-value">{{ ride.distance }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Ride Duration:</h5>
+                <p class="info-value">{{ ride.rideDuration }}</p>
+              </div>
+              <div class="info-section">
+                <h5 class="info-label">Status:</h5>
+                <p class="info-value">{{ ride.status }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

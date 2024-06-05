@@ -21,7 +21,7 @@ export class HasRoleDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.user.roles.some(r => this.appHasRole.includes(r))){
+    if (this.user.roles.some(r => this.appHasRole.includes(r)) && this.user.verificationStatus === 'ACCEPTED'){
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainerRef.clear()

@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, take } from 'rxjs';
 import { User } from '../_models/user';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,27 +12,33 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class NavComponent implements OnInit {
   isCollapsed = false;
+  user: User | null = null;
   model: any = {}
   
   constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) {
-    
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user){
+          this.user = user;
+        }
+      }
+    })
   }
 
   ngOnInit(): void {
     
   }
 
-  login(){
-    console.log('login triggered');
-    
+  login() {
     this.accountService.login(this.model).subscribe({
-      next: _ => this.router.navigateByUrl('/profile'),
+      next: (response: any) => {
+          this.router.navigateByUrl('/profile');
+      },
       error: error => {
-        this.toastr.error(error.error)
-        console.log(error);
-        
+        this.toastr.error(error.error);
+        console.error(error.error);
       }
-    })
+    });
   }
 
   logout(){

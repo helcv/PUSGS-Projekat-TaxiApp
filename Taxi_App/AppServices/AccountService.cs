@@ -92,6 +92,10 @@ public class AccountService : IAccountService
             if (user == null)
             {
                 return Result.Failure<TokenDto, string>("Invalid email address.");
+            }
+            if (user.VerificationStatus == EVerificationStatus.DENIED)
+            {
+                return Result.Failure<TokenDto, string>("Verification denied.");
             }      
 
             var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
@@ -215,9 +219,13 @@ public class AccountService : IAccountService
     {
         var user = await _userRepo.GetUserByIdAsync(id);
 
-        if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
+        /*if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
         {
             return Result.Failure<UserDto, string>("You are not verified");
+        } */
+        if (user.VerificationStatus == EVerificationStatus.DENIED)
+        {
+            return Result.Failure<UserDto, string>("You are not allowed");
         }
         if (user.IsBlocked == true)
         {
@@ -232,7 +240,8 @@ public class AccountService : IAccountService
             Email = user.Email,
             PhotoUrl = user.PhotoUrl,
             Age = user.DateOfBirth.CalculateAge(),
-            Address = user.Address
+            Address = user.Address,
+            VerificationStatus = user.VerificationStatus.ToString()
         };
 
         return Result.Success<UserDto, string>(userDto);

@@ -7,11 +7,14 @@
         <div class="profile-info">
           <img [src]="user.photoUrl ? user.photoUrl : 'assets/user.jpg'" alt="Profile Image" class="profile-image mb-3">
           <h5 class="card-title">{{ user.name }} {{ user.lastname }}</h5>
-          <div class="text-start mt-4">
+          <div class="text-start mt-4" *ngIf="user.verificationStatus === 'ACCEPTED'">
             <p class="card-text"><i class="fa fa-envelope me-2"></i>{{ user.email }}</p>
             <p class="card-text mt-2"><i class="fa fa-user me-2" aria-hidden="true"></i> {{ user.username }}</p>
             <p class="card-text mt-2"><i class="fa fa-map-pin me-2"></i> {{ user.address }}</p>
             <p class="card-text mt-2"><strong>Age:</strong> {{ user.age }}</p>
+          </div>
+          <div class="text-start mt-4 text-center" *ngIf="user.verificationStatus === 'IN_PROGRESS'">
+            <p class="card-text">Admin is reviewing your registration!</p>
           </div>
         </div>
       </div>

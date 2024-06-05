@@ -1,4 +1,4 @@
-export interface Ride {
+export interface DetailedRide {
     id: number;
     startAddress: string
     finalAddress: string
@@ -7,4 +7,6 @@ export interface Ride {
     distance: string
     rideDuration: string
     status: string
+    userUsername: string
+    driverUsername: string
   }

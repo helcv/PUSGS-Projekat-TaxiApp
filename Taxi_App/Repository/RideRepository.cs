@@ -72,7 +72,10 @@ public class RideRepository : IRideRepository
 
     public async Task<List<Ride>> GetAllRidesAsync()
     {
-        return  await _context.Rides.ToListAsync();
+        return  await _context.Rides
+            .Include(u => u.User)
+            .Include(d => d.Driver)
+            .ToListAsync();
     }
 
     public async Task<Ride> AddRide(Ride ride)

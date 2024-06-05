@@ -7,4 +7,5 @@ export interface User {
   age: number;
   address: string;
   roles: string[];
+  verificationStatus: string;
 }

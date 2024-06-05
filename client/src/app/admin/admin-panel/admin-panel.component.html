@@ -23,7 +23,7 @@
             <p><i class="fa fa-check me-2"></i> {{ driver.verificationStatus }}</p>
             <p><i class="fa fa-star me-2"></i> {{ driver.avgRate }}</p>
             <p><i class="fa fa-ban me-2"></i> {{ driver.isBlocked ? 'Yes' : 'No' }}</p>
-            <button class="btn btn-danger me-2" (click)="blockDriver(driver.id)" [disabled]="driver.isBlocked || driver.verificationStatus == 'IN_PROGRESS'">Block</button>
+            <button class="btn btn-danger me-2" (click)="blockDriver(driver.id)" [disabled]="driver.isBlocked || driver.verificationStatus != 'ACCEPTED'">Block</button>
             <button class="btn btn-warning" (click)="unBlockDriver(driver.id)" [disabled]="!driver.isBlocked">Unblock</button>
             <button class="btn btn-secondary mt-2 ms-2" (click)="toggleRatings(driver.id)">
               {{ showRatingsId === driver.id ? 'Hide Ratings' : 'Show Ratings' }}

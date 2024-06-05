@@ -20,6 +20,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './_directives/has-role.directive';
+import { RidesComponent } from './admin/rides/rides.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { HasRoleDirective } from './_directives/has-role.directive';
     RideHistoryComponent,
     ProfileComponent,
     AdminPanelComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    RidesComponent
   ],
   imports: [
     BrowserModule,
