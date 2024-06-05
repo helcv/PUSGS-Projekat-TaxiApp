@@ -1,12 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text;
-using AutoMapper;
-using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Taxi_App;
 
@@ -36,7 +30,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromForm]RegisterDto registerDto)
+    public async Task<IActionResult> Register(RegisterDto registerDto)
     {
         var validationResults = new List<ValidationResult>();
         var isValid = Validator.TryValidateObject(registerDto, new ValidationContext(registerDto), validationResults, true);

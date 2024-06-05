@@ -152,7 +152,7 @@ public class AccountService : IAccountService
             }
         }
 
-        var photoResult = await _photoService.AddPhotoAsync(registerDto.Photo);
+        /*var photoResult = await _photoService.AddPhotoAsync(registerDto.Photo);
         if (photoResult.Error != null) 
         {
             errMessages.Add(photoResult.Error.Message);
@@ -165,7 +165,7 @@ public class AccountService : IAccountService
         {
             errMessages.AddRange(result.Errors.Select(error => error.Description));
             return Result.Failure<SuccessCreateDto, IEnumerable<string>>(errMessages);
-        }
+        }*/
 
         var successCreateDto = new SuccessCreateDto
         {

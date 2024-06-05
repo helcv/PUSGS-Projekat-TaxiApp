@@ -1,68 +1,46 @@
-<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+<form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign up</h2>
   <hr>
-  <div class="mb-3">
-    <input type="text"
-      class="form-control"
-      name="username"
-      [(ngModel)]="model.username"
-      placeholder="Username"
-      >
-      <input type="email"
-      class="form-control mt-3"
-      name="email"
-      [(ngModel)]="model.email"
-      placeholder="Email"
-      >
-      <input type="password"
-      class="form-control mt-3"
-      name="password"
-      [(ngModel)]="model.password"
-      placeholder="Password"
-      >
-      <input type="password"
-      class="form-control mt-3"
-      name="repeatPassword"
-      [(ngModel)]="model.repeatPassword"
-      placeholder="Repeat Password"
-      >
-      <input type="text"
-      class="form-control mt-3"
-      name="name"
-      [(ngModel)]="model.name"
-      placeholder="Name"
-      >
-      <input type="text"
-      class="form-control mt-3"
-      name="lastname"
-      [(ngModel)]="model.lastname"
-      placeholder="Lastname"
-      >
-      <input type="text"
-      class="form-control mt-3"
-      name="address"
-      [(ngModel)]="model.address"
-      placeholder="Address"
-      #address="ngModel"
-      >
-      <input type="date"
-      class="form-control mt-3"
-      name="dateOfBirth"
-      [(ngModel)]="model.dateOfBirth"
-      placeholder="Date of Birth"
-      #dateOfBirth="ngModel"
-      >
-    <div class="mt-3 text-center">
-      <label>Who you are?</label>
-      <select class="form-select " name="role" [(ngModel)]="model.role" required #role="ngModel">
-        <option value="" disabled>Select Role</option>
-        <option value="User">User</option>
-        <option value="Driver">Driver</option>
-      </select> 
-    </div>  
+  <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Username'"></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['email'])" [label]="'Email'" [type]="'email'"></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'" [type]="'password'"></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confirm Password'" [type]="'password'" ></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['name'])" [label]="'Name'"></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['lastname'])" [label]="'Lastname'"></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['address'])" [label]="'Address'"></app-text-input>
+
+  <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of Birth'" [maxDate]="maxDate"></app-date-picker>
+
+  <div class="mb-3 d-flex justify-content-between text-center">
+    <label>Who you are?</label>
+    <div class="form-check">
+      <input type="radio"
+        class="form-check-input"
+        formControlName="role"
+        value="User"
+        id="roleUser">
+      <label class="form-check-label" for="roleUser">User</label>
+    </div>
+    <div class="form-check">
+      <input type="radio"
+        class="form-check-input"
+        formControlName="role"
+        value="Driver"
+        id="roleDriver">
+      <label class="form-check-label" for="roleDriver">Driver</label>
+    </div>
   </div>
-  <div class="text-center mb-3"> 
-    <button class="btn btn-success me-2" type="submit">Register</button>
-    <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+
+  <div class="row" *ngIf="validationErrors">
+    <ul class="text-danger">
+        <li *ngFor="let error of validationErrors">
+            {{error}}
+        </li>
+    </ul>
   </div>
+
+  <div class="text-center">
+      <button [disabled]="!registerForm.valid" class="btn btn-success me-2" type="submit">Register</button>
+      <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
+    </div>
 </form>

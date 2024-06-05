@@ -2,6 +2,8 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { Observable, of } from 'rxjs';
 import { User } from '../_models/user';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -12,7 +14,7 @@ export class NavComponent implements OnInit {
   isCollapsed = false;
   model: any = {}
   
-  constructor(public accountService: AccountService, private injector: Injector) {
+  constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) {
     
   }
 
@@ -22,15 +24,14 @@ export class NavComponent implements OnInit {
 
   login(){
     this.accountService.login(this.model).subscribe({
-      next: response => {
-        console.log(response);
-      },
-      error: error => console.log(error)
+      next: _ => this.router.navigateByUrl('/profile'),
+      error: error => this.toastr.error(error.error)
     })
   }
 
   logout(){
     this.accountService.logout();
+    this.router.navigateByUrl('/')
   }
 
   toggleNavbar(){

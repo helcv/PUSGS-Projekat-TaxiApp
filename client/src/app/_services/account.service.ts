@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from
 import { environment } from 'src/environments/environment';
 import { Token } from '../_models/token';
 import { User } from '../_models/user';
+import { TokenId } from '../_models/tokenId';
 
 @Injectable({
   providedIn: 'root'

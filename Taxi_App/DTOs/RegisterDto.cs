@@ -19,7 +19,6 @@ public class RegisterDto
     [Required(ErrorMessage = "Date of birth is required")]
     public DateOnly? DateOfBirth { get; set; }
     [Required(ErrorMessage = "Address is required")]
-    [RegularExpression(@"^\d+[a-zA-Z]?\s*,\s*[\w\s]+,\s*[\w\s]+,\s*[\w\s]+$", ErrorMessage = "Address should be in the format 'Number, Street, City, Country'")]
     public string Address { get; set; }
     [Required(ErrorMessage = "Role is required")]
     public string Role { get; set; }
