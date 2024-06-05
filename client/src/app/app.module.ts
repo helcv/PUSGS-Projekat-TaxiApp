@@ -18,6 +18,8 @@ import { RideHistoryComponent } from './ride/ride-history/ride-history.component
 import { ProfileComponent } from './profile/profile.component';
 import { ToastrModule } from 'ngx-toastr';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
     DatePickerComponent,
     CreateRideComponent,
     RideHistoryComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminPanelComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,

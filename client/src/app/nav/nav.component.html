@@ -10,11 +10,14 @@
             <li class="nav-item">
               <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
             </li>
-            <li class="nav-item">
+            <li *appHasRole="['User']" class="nav-item">
               <a class="nav-link" routerLink="/ride" routerLinkActive="active">Get a ride</a>
             </li>
-            <li class="nav-item">
+            <li *appHasRole="['Driver', 'User']" class="nav-item">
               <a class="nav-link" routerLink="/ride-history" routerLinkActive="active">Ride history</a>
+            </li>
+            <li *appHasRole="['Admin']" class="nav-item">
+              <a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
             </li>
           </ng-container>
         </ul>

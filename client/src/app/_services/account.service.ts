@@ -13,9 +13,10 @@ export class AccountService {
   baseUrl = environment.apiUrl;
   private currUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currUserSource.asObservable();
-  
+  token: string | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+   }
 
   login(model: any) {
     return this.http.post<Token>(this.baseUrl + 'account/login', model).pipe(
@@ -27,6 +28,7 @@ export class AccountService {
             tap(user => {
               if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
+                this.setCurrentUser(user);
               }
             })
           );
@@ -49,6 +51,7 @@ export class AccountService {
             tap(user => {
               if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
+                this.setCurrentUser(user);
               }
             })
           );
@@ -67,8 +70,33 @@ export class AccountService {
     this.currUserSource.next(null);
   }
 
-  setCurrentUser(user: User){
+  setCurrentUser(user: User) {
+    const tokenString = localStorage.getItem('token');
+    if (tokenString) {
+      const tokenObject = JSON.parse(tokenString);
+      this.token = tokenObject.token;
+    }
+  
+    if (!user.roles) {
+      user.roles = []; 
+    }
+  
+    if (this.token) {
+      const roles = this.getDecodedToken(this.token).role;
+      console.log(roles);
+      if (Array.isArray(roles)) {
+        user.roles = [...user.roles, ...roles];
+      } else {
+        user.roles.push(roles);
+      }
+    }
+  
     this.currUserSource.next(user);
+  }
+  
+
+  getDecodedToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]))
   }
 
   private getUserProfile(token: string): Observable<User | null> {
