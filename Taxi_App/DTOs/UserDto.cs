@@ -10,4 +10,5 @@ public class UserDto
     public int Age { get; set; }
     public string Address { get; set; }
     public string VerificationStatus { get; set; }
+    public bool Busy { get; set; }
 }

@@ -8,4 +8,5 @@ export interface User {
   address: string;
   roles: string[];
   verificationStatus: string;
+  busy: boolean;
 }

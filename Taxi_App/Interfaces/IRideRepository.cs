@@ -13,5 +13,6 @@ public interface IRideRepository
     Task<Ride> GetRideInProgressForUserAsync(int userId);
     Task<Ride> GetRideInProgressForDriverAsync(int userId);
     Task<bool> CompleteRide(int id);
+    Task DeleteRideAsync(int rideId);
     Task<bool> SaveAllAsync();
 }

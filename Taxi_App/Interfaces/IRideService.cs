@@ -10,4 +10,5 @@ public interface IRideService
     Task<Result<IEnumerable<RideDto>, string>> GetCreatedRidesAsync(string username);
     Task<Result<IEnumerable<CompleteRideDto>, string>> GetCompletedRidesAsync(string username);
     Task<Result<TimeDto, string>> GetRemainingTime(string username);
+    Task<Result<SuccessMessageDto, string>> DenyRideRequestAsync(string username, int id);
 }

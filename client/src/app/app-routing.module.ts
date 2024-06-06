@@ -9,6 +9,9 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { adminGuard } from './_guards/admin.guard';
 import { RidesComponent } from './admin/rides/rides.component';
 import { homeAccessGuard } from './_guards/home-access.guard';
+import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
+import { busyGuard } from './_guards/busy-guard.guard';
+import { notBusyGuard } from './_guards/not-busy.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [homeAccessGuard]},
@@ -16,9 +19,10 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [
-      {path: 'profile', component: ProfileComponent},
-      {path: 'ride', component: CreateRideComponent},
-      {path: 'ride-history', component: RideHistoryComponent},
+      {path: 'active', component: ActiveRideComponent, canActivate: [busyGuard]},
+      {path: 'profile', component: ProfileComponent, canActivate: [notBusyGuard]},
+      {path: 'ride', component: CreateRideComponent, canActivate: [notBusyGuard]},
+      {path: 'ride-history', component: RideHistoryComponent, canActivate: [notBusyGuard]},
       {path: 'drivers', component: AdminPanelComponent, canActivate: [adminGuard]},
       {path: 'rides', component: RidesComponent, canActivate: [adminGuard]}
     ]

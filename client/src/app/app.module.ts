@@ -21,6 +21,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './_directives/has-role.directive';
 import { RidesComponent } from './admin/rides/rides.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { RidesComponent } from './admin/rides/rides.component';
     ProfileComponent,
     AdminPanelComponent,
     HasRoleDirective,
-    RidesComponent
+    RidesComponent,
+    ActiveRideComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { RidesComponent } from './admin/rides/rides.component';
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
-    CollapseModule.forRoot()
+    CollapseModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -21,7 +21,7 @@
         </div>
       </div>
       <div *ngFor="let ride of rides">
-        <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id] && ride.id !== activeRide, 'show': isCollapsed[ride.id] || ride.id === activeRide}">
+        <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed(ride.id), 'show': isCollapsed(ride.id)}">
           <h3 class="text-center mb-4 fs-3">Ride Information</h3>
           <div class="card w-75 mx-auto mb-3 text-center ride-info">
             <div class="card-body">

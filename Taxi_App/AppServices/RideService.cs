@@ -50,7 +50,7 @@ public class RideService : IRideService
             return Result.Failure<SuccessMessageDto, string>("Cant change ride status anymore.");
         }
 
-        user.IsBlocked = true;
+        user.Busy = true;
         await _userManager.UpdateAsync(user);
 
         ride.Status = ERideStatus.IN_PROGRESS;
@@ -73,9 +73,9 @@ public class RideService : IRideService
         {
             return Result.Failure<RideDto, string>("You are not verified.");
         }
-        if (user.IsBlocked == true) 
+        if (user.Busy == true) 
         {
-            return Result.Failure<RideDto, string>("You are blocked.");
+            return Result.Failure<RideDto, string>("Not allowed.");
         }
         if (user == null)
         {
@@ -214,8 +214,8 @@ public class RideService : IRideService
             else
                 currDriver = null;
 
-            currUser.IsBlocked = false;
-            currDriver.IsBlocked = false;
+            currUser.Busy = false;
+            currDriver.Busy = false;
 
             await _userManager.UpdateAsync(currUser);
             await _userManager.UpdateAsync(currDriver);
@@ -248,9 +248,9 @@ public class RideService : IRideService
         {
             return Result.Failure<SuccessMessageDto, string>("You are not verified.");
         }
-        if (user.IsBlocked == true) 
+        if (user.Busy == true) 
         {
-            return Result.Failure<SuccessMessageDto, string>("You are blocked.");
+            return Result.Failure<SuccessMessageDto, string>("Not allowed.");
         }
         if (user == null)
         {
@@ -272,7 +272,7 @@ public class RideService : IRideService
             return Result.Failure<SuccessMessageDto, string>("Can not request this ride anymore.");
         }
 
-        user.IsBlocked = true;
+        user.Busy = true;
         await _userManager.UpdateAsync(user);
 
         ride.Status = ERideStatus.CREATED;
@@ -282,5 +282,46 @@ public class RideService : IRideService
         }
         
         return Result.Success<SuccessMessageDto, string>(new SuccessMessageDto { Message = "Ride successfully requested."});
+    }
+
+    public async Task<Result<SuccessMessageDto, string>> DenyRideRequestAsync(string username, int id)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+
+        if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
+        {
+            return Result.Failure<SuccessMessageDto, string>("You are not verified.");
+        }
+        if (user.Busy == true) 
+        {
+            return Result.Failure<SuccessMessageDto, string>("Not allowed.");
+        }
+        if (user == null)
+        {
+            return Result.Failure<SuccessMessageDto, string>("User does not exist.");
+        }
+
+        var ride = await _rideRepository.GetRideById(id);
+
+        if (ride == null)
+        {
+            return Result.Failure<SuccessMessageDto, string>("Ride does not exist.");
+        }
+        if (ride.UserId != user.Id) 
+        {
+            return Result.Failure<SuccessMessageDto, string>("You can deny only your ride.");
+        }
+        if (ride.Status != ERideStatus.PROCESSING)
+        {
+            return Result.Failure<SuccessMessageDto, string>("Can not deny this ride anymore.");
+        }
+
+        await _rideRepository.DeleteRideAsync(ride.Id);
+        if (!await _rideRepository.SaveAllAsync())
+        {
+            return Result.Failure<SuccessMessageDto, string>("Unable to delete ride.");
+        }
+        
+        return Result.Success<SuccessMessageDto, string>(new SuccessMessageDto { Message = "Ride successfully denied."});
     }
 }

@@ -241,7 +241,8 @@ public class AccountService : IAccountService
             PhotoUrl = user.PhotoUrl,
             Age = user.DateOfBirth.CalculateAge(),
             Address = user.Address,
-            VerificationStatus = user.VerificationStatus.ToString()
+            VerificationStatus = user.VerificationStatus.ToString(),
+            Busy = user.Busy
         };
 
         return Result.Success<UserDto, string>(userDto);

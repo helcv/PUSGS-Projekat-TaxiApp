@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from
 import { environment } from 'src/environments/environment';
 import { Token } from '../_models/token';
 import { User } from '../_models/user';
-import { TokenId } from '../_models/tokenId';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +23,7 @@ export class AccountService {
         const token = response;
         if (token) {
           localStorage.setItem('token', JSON.stringify(token));
-          return this.getUserProfile(token.token).pipe(
+          return this.getUserProfile().pipe(
             tap(user => {
               if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
@@ -47,7 +46,7 @@ export class AccountService {
         const token = response;
         if (token) {
           localStorage.setItem('token', JSON.stringify(token));
-          return this.getUserProfile(token.token).pipe(
+          return this.getUserProfile().pipe(
             tap(user => {
               if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
@@ -114,10 +113,8 @@ export class AccountService {
       return null;
     }
 
-  private getUserProfile(token: string): Observable<User | null> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+   getUserProfile(): Observable<User | null> {
+    const headers = this.getAuthHeaders()
     return this.http.get<User>(this.baseUrl + 'account', { headers }).pipe(
       catchError(error => {
         console.error('Error fetching user profile:', error);

@@ -16,13 +16,11 @@ export class NavComponent implements OnInit {
   model: any = {}
   
   constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
+    this.accountService.currentUser$.subscribe({
       next: user => {
-        if (user){
-          this.user = user;
-        }
+        this.user = user;
       }
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -32,7 +30,14 @@ export class NavComponent implements OnInit {
   login() {
     this.accountService.login(this.model).subscribe({
       next: (response: any) => {
+        console.log(this.user?.busy);
+        if (this.user?.busy)
+          {
+            this.router.navigateByUrl('/active');
+          }
+        else{
           this.router.navigateByUrl('/profile');
+        }
       },
       error: error => {
         this.toastr.error(error.error);

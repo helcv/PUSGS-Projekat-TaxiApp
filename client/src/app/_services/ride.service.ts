@@ -12,38 +12,28 @@ import { Token } from '@angular/compiler';
 })
 export class RideService {
   baseUrl = environment.apiUrl;
-  user: User | null = null;
 
   constructor(private http: HttpClient, private accountService: AccountService) {
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: user => {
-        if (user){
-          this.user = user;
-        }
-      }
-    })
+    
    }
+
+   createRide(model: any): Observable<Ride>{
+    const headers = this.accountService.getAuthHeaders();
+    return this.http.post<Ride>(this.baseUrl + 'ride', model, {headers})
+   }
+
+   requestRide(rideId: number): Observable<any> {
+    const headers = this.accountService.getAuthHeaders();
+    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/request-ride`, {}, {headers});
+  }
+
+  declineRide(rideId: number): Observable<any> {
+    const headers = this.accountService.getAuthHeaders();
+    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/deny-ride`, {}, {headers});
+  }
 
    getCompletedRides(): Observable<Ride[]>{
-    const headers = this.getAuthHeaders();
-    console.log(headers);
-    
+    const headers = this.accountService.getAuthHeaders();
     return this.http.get<Ride[]>(this.baseUrl + 'ride/completed-rides', {headers})
    }
-
-   private getAuthToken(): string | null {
-    const tokenString = localStorage.getItem('token');
-    if (tokenString) {
-      const tokenObject = JSON.parse(tokenString);
-      return tokenObject.token;
-    }
-    return null;
-  }
-
-   private getAuthHeaders(): HttpHeaders {
-    const token = this.getAuthToken();
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-  }
 }

@@ -9,7 +9,6 @@ import { AdminService } from 'src/app/_services/admin.service';
   styleUrls: ['./rides.component.css']
 })
 export class RidesComponent implements OnInit {
-  isCollapsed: { [key: number]: boolean } = {};
   activeRide: number | null = null;
   rides: DetailedRide[] = [];
    
@@ -38,6 +37,9 @@ export class RidesComponent implements OnInit {
     } else {
       this.activeRide = rideId; 
     }
-    this.isCollapsed[rideId] = !this.isCollapsed[rideId];
+  }
+
+  isCollapsed(rideId: number): boolean {
+    return this.activeRide === rideId;
   }
 }

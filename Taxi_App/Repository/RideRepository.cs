@@ -28,6 +28,15 @@ public class RideRepository : IRideRepository
         }
     }
 
+    public async Task DeleteRideAsync(int rideId)
+    {
+         var ride = await _context.Rides.FindAsync(rideId);
+         if (ride != null)
+         {
+            _context.Rides.Remove(ride);
+         }
+    }
+
     public async Task<Ride> GetRideInProgressForUserAsync(int userId)
     {
         return await _context.Rides.FirstOrDefaultAsync(r => r.UserId == userId && r.Status == ERideStatus.IN_PROGRESS);
@@ -75,6 +84,7 @@ public class RideRepository : IRideRepository
         return  await _context.Rides
             .Include(u => u.User)
             .Include(d => d.Driver)
+            .Where(r => r.Status != ERideStatus.PROCESSING)
             .ToListAsync();
     }
 

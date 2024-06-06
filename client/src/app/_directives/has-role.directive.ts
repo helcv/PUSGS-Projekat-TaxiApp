@@ -8,6 +8,7 @@ import { take } from 'rxjs';
 })
 export class HasRoleDirective implements OnInit {
   @Input() appHasRole: string[] = [];
+  @Input() busy: boolean = false;
   user: User = {} as User
 
   constructor(private viewContainerRef: ViewContainerRef,
@@ -21,7 +22,7 @@ export class HasRoleDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.user.roles.some(r => this.appHasRole.includes(r)) && this.user.verificationStatus === 'ACCEPTED'){
+    if (this.user.roles.some(r => this.appHasRole.includes(r)) && this.user.verificationStatus === 'ACCEPTED' && this.user.busy === this.busy){
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainerRef.clear()

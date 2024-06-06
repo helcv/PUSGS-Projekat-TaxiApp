@@ -1,26 +1,70 @@
 <div class="container">
     <h1 class="text-center">Order a ride</h1>
-    <form #distanceForm="ngForm" autocomplete="off" (ngSubmit)="createRide()">
+    <form [formGroup]="rideForm" autocomplete="off" (ngSubmit)="createRide()">
         <div class="form-group container">
             <label for="start">Start:</label>
-            <input 
-                #startInput
-                class="form-control"
-                id="startInput"
+            <input #startInput 
+                formControlName="startAddress"
+                (change)="onDropdownSelect('startAddress', $event)" 
                 type="text" 
-                placeholder="Enter start Location" 
-                required>
+                placeholder="Enter start Location"
+                class="form-control"
+                [class.is-invalid]="rideForm.controls['startAddress'].touched && rideForm.controls['startAddress'].invalid">
+            <div
+                *ngIf="rideForm.controls['startAddress'].invalid && (rideForm.controls['startAddress'].dirty || rideForm.controls['startAddress'].touched)">
+                <div *ngIf="rideForm.controls['startAddress'].errors?.['required']" class="invalid-feedback d-block">
+                    Start address is required.
+                </div>
+                <div *ngIf="rideForm.controls['startAddress'].errors?.['invalidInput']"
+                    class="invalid-feedback d-block">
+                    Start address must be in format Street Name Street Number, City, Country.
+                </div>
+            </div>
         </div>
         <div class="form-group container mt-3">
             <label for="finish">Finish:</label>
-            <input 
-                #finishInput
-                class="form-control"
-                id="finishInput" 
+            <input #finishInput 
+                formControlName="finalAddress"
+                (change)="onDropdownSelect('finalAddress', $event)" 
                 type="text" 
-                placeholder="Enter finish destination" 
-                required>
+                placeholder="Enter final destination"
+                class="form-control"
+                [class.is-invalid]="rideForm.controls['finalAddress'].touched && rideForm.controls['finalAddress'].invalid">
+            <div
+                *ngIf="rideForm.controls['finalAddress'].invalid && (rideForm.controls['finalAddress'].dirty || rideForm.controls['finalAddress'].touched)">
+                <div *ngIf="rideForm.controls['finalAddress'].errors?.['required']" class="invalid-feedback d-block">
+                    Final address is required.
+                </div>
+                <div *ngIf="rideForm.controls['finalAddress'].errors?.['invalidInput']"
+                    class="invalid-feedback d-block">
+                    Start address must be in format Street Name Street Number, City, Country.
+                </div>           
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary mt-3 ms-3">Order ride</button>
+        <button type="submit" class="btn btn-primary mt-3 ms-3" [disabled]="rideForm.invalid">Order ride</button>
     </form>
 </div>
+
+
+<!--Modal-->
+<ng-template #rideModal>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ride Details</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>Start Address:</strong> {{createdRide?.startAddress}}</p>
+                <p><strong>Final Address:</strong> {{createdRide?.finalAddress}}</p>
+                <p><strong>Distance:</strong> {{createdRide?.distance}}</p>
+                <p><strong>Price:</strong> {{createdRide?.price}} <i class="fa fa-euro"></i></p>
+                <p><strong>Pickup time:</strong> {{createdRide?.pickUpTime}} mins</p>
+                <p><strong>Ride duration:</strong> {{createdRide?.rideDuration}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="declineRide()">Decline</button>
+                <button type="button" class="btn btn-primary" (click)="requestRide()">Accept</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

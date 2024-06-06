@@ -22,4 +22,19 @@ export class CustomValidators {
 
     return Object.keys(errors).length > 0 ? errors : null;
   }
+
+  static addressParts(control: AbstractControl): ValidationErrors | null {
+    const value: string = control.value || '';
+    if (!value) {
+      return null;
+    }
+
+    const parts = value.split(',').map(part => part.trim());
+
+    if (parts.length < 3) {
+      return { invalidAddress: 'Invalid address.' };
+    }
+
+    return null;
+  }
 }

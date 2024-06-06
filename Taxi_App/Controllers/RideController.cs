@@ -43,6 +43,19 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
+    [HttpPatch("{id}/deny-ride")]
+    [Authorize(Roles = "User")]
+    public async Task<ActionResult> DenyRide(int id)
+    {
+        var currUser = _contextAccessor.HttpContext.User;
+        var currUsername = currUser.GetUsername();
+
+        var result = await _rideService.DenyRideRequestAsync(currUsername, id);
+        if (!result.IsSuccess) return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+
     [HttpPatch("{id}/accept-ride")]
     [Authorize(Roles = "Driver")]
     public async Task<ActionResult> AcceptRide(int id)
