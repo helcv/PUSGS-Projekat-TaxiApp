@@ -5,8 +5,9 @@ import { Ride } from 'src/app/_models/ride';
 import { RideService } from 'src/app/_services/ride.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AccountService } from 'src/app/_services/account.service';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-create-ride',
@@ -17,6 +18,7 @@ export class CreateRideComponent implements AfterViewInit {
   @ViewChild('startInput') startInput!: ElementRef;
   @ViewChild('finishInput') finishInput!: ElementRef;
   @ViewChild('rideModal') rideModal!: TemplateRef<any>;
+  user: User | null = null;
   rideForm: FormGroup;
   createdRide?: Ride;
   startAddress: string = '';
@@ -29,6 +31,12 @@ export class CreateRideComponent implements AfterViewInit {
     private toastr: ToastrService,
     private router: Router,
     private accountService: AccountService) {
+
+    this.accountService.currentUser$.subscribe({
+      next: user => {
+        this.user = user;
+      }
+    });
 
     this.rideForm = this.fb.group({
       startAddress: ['', [Validators.required, this.addressValidator]],
@@ -122,6 +130,9 @@ export class CreateRideComponent implements AfterViewInit {
       this.rideService.requestRide(this.createdRide.id).subscribe({
         next: () => {
           this.toastr.success('Ride requested successfully!');
+          if (this.user) {
+            this.user.busy = true;
+          }
           this.router.navigateByUrl('/active');
           this.rideModalRef?.hide();
         },

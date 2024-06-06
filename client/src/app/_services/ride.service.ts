@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { AccountService } from './account.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { take, Observable } from 'rxjs';
+import { take, Observable, tap, switchMap } from 'rxjs';
 import { Ride } from '../_models/ride';
 import { Token } from '@angular/compiler';
 
@@ -24,7 +24,11 @@ export class RideService {
 
    requestRide(rideId: number): Observable<any> {
     const headers = this.accountService.getAuthHeaders();
-    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/request-ride`, {}, {headers});
+    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/request-ride`, {}, {headers}).pipe(
+      switchMap(() => {
+        return this.accountService.getUserProfile();
+      })
+    );
   }
 
   declineRide(rideId: number): Observable<any> {

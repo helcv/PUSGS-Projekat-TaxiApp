@@ -1,32 +1,56 @@
-import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewContainerRef } from '@angular/core';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
-import { take } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Directive({
   selector: '[appHasRole]'
 })
-export class HasRoleDirective implements OnInit {
+export class HasRoleDirective implements OnInit, OnChanges {
   @Input() appHasRole: string[] = [];
-  @Input() busy: boolean = false;
-  user: User = {} as User
+  @Input('busy') busy: boolean = false;
+  user: User = {} as User;
+  private unsubscribe$ = new Subject<void>();
 
-  constructor(private viewContainerRef: ViewContainerRef,
+  constructor(
+    private viewContainerRef: ViewContainerRef,
     private templateRef: TemplateRef<any>,
-    private accountService: AccountService) { 
-      this.accountService.currentUser$.pipe(take(1)).subscribe({
-        next: user => {
-          if (user) this.user = user
-        }
-      })
-  }
+    private accountService: AccountService
+  ) {}
 
   ngOnInit(): void {
-    if (this.user.roles.some(r => this.appHasRole.includes(r)) && this.user.verificationStatus === 'ACCEPTED' && this.user.busy === this.busy){
-      this.viewContainerRef.createEmbeddedView(this.templateRef);
-    } else {
-      this.viewContainerRef.clear()
+    this.accountService.currentUser$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: user => {
+          if (user) {
+            this.user = user;
+            this.updateView();
+          }
+        }
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['busy']) {
+      this.updateView();
     }
   }
 
+  private updateView(): void {
+    if (
+      this.user.roles.some(r => this.appHasRole.includes(r)) &&
+      this.user['busy'] === this.busy
+    ) {
+      this.viewContainerRef.createEmbeddedView(this.templateRef);
+    } else {
+      this.viewContainerRef.clear();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

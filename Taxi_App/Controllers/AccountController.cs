@@ -29,6 +29,17 @@ public class AccountController : BaseApiController
 
     }
 
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProfileById(int id)
+    {
+        var result = await _accountService.GetProfileAsync(id);
+        if (result.IsFailure) return BadRequest(result.Error);
+        
+        return Ok(result.Value);
+
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto registerDto)
     {

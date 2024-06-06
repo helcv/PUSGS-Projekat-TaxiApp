@@ -89,7 +89,7 @@ export class AccountService {
         user.roles.push(roles);
       }
     }
-  
+
     this.currUserSource.next(user);
   }
   
@@ -116,6 +116,15 @@ export class AccountService {
    getUserProfile(): Observable<User | null> {
     const headers = this.getAuthHeaders()
     return this.http.get<User>(this.baseUrl + 'account', { headers }).pipe(
+      catchError(error => {
+        console.error('Error fetching user profile:', error);
+        return of(null);
+      })
+    );
+  }
+  getUserProfileById(id: number): Observable<User | null> {
+    const headers = this.getAuthHeaders()
+    return this.http.get<User>(this.baseUrl + 'account/' + id, { headers }).pipe(
       catchError(error => {
         console.error('Error fetching user profile:', error);
         return of(null);

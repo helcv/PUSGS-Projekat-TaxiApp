@@ -8,16 +8,17 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class NotBusyGuard {
+export class BusyGuard {
   constructor(private accountService: AccountService, private toastr: ToastrService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.accountService.currentUser$.pipe(
       map(user => {
-        if (user && user.busy === false) {
+        if (user && user.busy === true) {
           return true; 
         } else {
           this.toastr.error('Not allowed.');
+          this.router.navigateByUrl('/profile')
           return false; 
         }
       })

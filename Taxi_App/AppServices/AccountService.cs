@@ -234,6 +234,7 @@ public class AccountService : IAccountService
 
         var userDto = new UserDto
         {
+            Id = user.Id,
             Name = user.Name,
             Username = user.UserName,
             Lastname = user.Lastname,
