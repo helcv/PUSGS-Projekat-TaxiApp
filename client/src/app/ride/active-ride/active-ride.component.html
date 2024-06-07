@@ -1,1 +1,17 @@
-<p>active-ride works!</p>
+<div *ngIf="ride">
+    <div class="card mb-3">
+      <div class="card-header">
+        <h4 class="card-title">Waiting for driver to accept...</h4>
+      </div>
+      <div class="card-body">
+        <p><strong>Start Address:</strong> {{ ride.startAddress }}</p>
+        <p><strong>Final Address:</strong> {{ ride.finalAddress }}</p>
+        <p><strong>Distance:</strong> {{ ride.distance }}</p>
+        <p><strong>Price:</strong> {{ ride.price }} <i class="fa fa-euro"></i></p>
+        <p><strong>Pickup time:</strong> {{ ride.pickUpTime }} mins</p>
+        <p><strong>Ride duration:</strong> {{ ride.rideDuration }}</p>
+      </div>
+      <div class="card-footer text-end">
+      </div>
+    </div>
+  </div>

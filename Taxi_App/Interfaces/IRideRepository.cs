@@ -6,7 +6,7 @@ public interface IRideRepository
 {
     Task<Ride> AddRide(Ride ride);
     Task<Ride> GetRideById(int id);
-    Task<List<Ride>> GetRidesForUser(int id);
+    Task<Ride> GetCreatedRideForUser(int id);
     Task<List<Ride>> GetAllRidesAsync();
     Task<List<Ride>> GetAllCreatedRidesAsync();
     Task<List<CompleteRideDto>> GetCompletedRidesAsync(int id, bool isDriver);

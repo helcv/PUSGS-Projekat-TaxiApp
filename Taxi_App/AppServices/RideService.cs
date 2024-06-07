@@ -324,4 +324,15 @@ public class RideService : IRideService
         
         return Result.Success<SuccessMessageDto, string>(new SuccessMessageDto { Message = "Ride successfully denied."});
     }
+
+    public async Task<Result<RideDto, string>> GetCreatedRideAsync(int userId)
+    {
+        var ride = await _rideRepository.GetCreatedRideForUser(userId);
+        if (ride == null)
+        {
+            return Result.Failure<RideDto, string>("Ride does not exist");
+        }
+
+        return _mapper.Map<RideDto>(ride);
+    }
 }

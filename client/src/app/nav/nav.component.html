@@ -21,7 +21,10 @@
           </li>
           <li *appHasRole="['Admin']" class="nav-item">
             <a class="nav-link" routerLink="/rides" routerLinkActive="active">Rides</a>
-          </li>       
+          </li>
+          <li *appHasRole="['Driver']" class="nav-item">
+            <a class="nav-link" routerLink="/new-rides" routerLinkActive="active">New rides</a>
+          </li>         
         </ng-container>
       </ul>
 

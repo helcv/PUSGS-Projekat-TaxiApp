@@ -12,6 +12,8 @@ import { homeAccessGuard } from './_guards/home-access.guard';
 import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
 import { BusyGuard } from './_guards/busy.guard';
 import { NotBusyGuard } from './_guards/not-busy.guard';
+import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
+import { CountdownComponent } from './ride/countdown/countdown.component';
 
 
 const routes: Routes = [
@@ -21,8 +23,10 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {path: 'active', component: ActiveRideComponent, canActivate: [BusyGuard]},
+      {path: 'countdown', component: CountdownComponent, canActivate: [BusyGuard]},
       {path: 'profile', component: ProfileComponent, canActivate: [NotBusyGuard]},
       {path: 'ride', component: CreateRideComponent, canActivate: [NotBusyGuard]},
+      {path: 'new-rides', component: NewRidesComponent, canActivate: [NotBusyGuard]},
       {path: 'ride-history', component: RideHistoryComponent, canActivate: [NotBusyGuard]},
       {path: 'drivers', component: AdminPanelComponent, canActivate: [adminGuard]},
       {path: 'rides', component: RidesComponent, canActivate: [adminGuard]}

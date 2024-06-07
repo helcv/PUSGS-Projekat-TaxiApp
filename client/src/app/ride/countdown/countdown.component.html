@@ -1,0 +1,15 @@
+<ng-template #rideModal>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Time Details</h4>
+        </div>
+        <div class="modal-body">
+          <p><strong>Pick-Up Time:</strong> {{time?.pickUpHours}}:{{time?.pickUpMinutes}}:{{time?.pickUpSeconds}}</p>
+          <p><strong>Ride Duration:</strong> {{time?.rideHours}}:{{time?.rideMinutes}}:{{time?.rideSeconds}}</p>
+          <p>{{time?.message}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  

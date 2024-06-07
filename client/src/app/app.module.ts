@@ -23,6 +23,8 @@ import { HasRoleDirective } from './_directives/has-role.directive';
 import { RidesComponent } from './admin/rides/rides.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
+import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
+import { CountdownComponent } from './ride/countdown/countdown.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
     AdminPanelComponent,
     HasRoleDirective,
     RidesComponent,
-    ActiveRideComponent
+    ActiveRideComponent,
+    NewRidesComponent,
+    CountdownComponent
   ],
   imports: [
     BrowserModule,

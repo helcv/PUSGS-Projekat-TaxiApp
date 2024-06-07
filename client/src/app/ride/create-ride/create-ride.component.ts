@@ -133,7 +133,7 @@ export class CreateRideComponent implements AfterViewInit {
           if (this.user) {
             this.user.busy = true;
           }
-          this.router.navigateByUrl('/active');
+          this.router.navigate(['/active'], { queryParams: { rideId: this.createdRide?.id } });
           this.rideModalRef?.hide();
         },
         error: (err) => {

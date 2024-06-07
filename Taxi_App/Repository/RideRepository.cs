@@ -101,14 +101,14 @@ public class RideRepository : IRideRepository
         return await _context.Rides.FindAsync(id);
     }
 
-    public async Task<List<Ride>> GetRidesForUser(int id)   //add to user controller
+    public async Task<Ride> GetCreatedRideForUser(int id)
     {
-        var driverRides = await _context.Rides
+        var driverRide = await _context.Rides
             .Where(r => r.UserId == id)
-            .Where(r => r.Status != ERideStatus.PROCESSING)
-            .ToListAsync();
+            .Where(r => r.Status == ERideStatus.CREATED)
+            .FirstOrDefaultAsync();
 
-        return driverRides;
+        return driverRide;
     }
 
     public async Task<bool> SaveAllAsync()
