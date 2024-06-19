@@ -7,6 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Time } from 'src/app/_models/time';
 import { AccountService } from 'src/app/_services/account.service';
 import { User } from 'src/app/_models/user';
+import { DetailedRide } from 'src/app/_models/detailedRide';
 
 @Component({
   selector: 'app-countdown',
@@ -19,6 +20,7 @@ export class CountdownComponent implements OnInit{
   time: Time | null = null;
   intervalSubscription: Subscription | null = null;
   user: User | null = null;
+  currentRide: DetailedRide | null = null;
   
   constructor(private rideService: RideService,
     private router: Router,
@@ -31,14 +33,14 @@ export class CountdownComponent implements OnInit{
           this.user = user;
         }
       });
-    
   }
 
   ngOnInit(): void {
     this.loadUserProfile();
     if(this.user?.busy)
       this.startUpdatingTime()
-    
+
+    this.loadInProgressRide();
   }
 
   openModal(template: TemplateRef<any>) {
@@ -49,10 +51,28 @@ export class CountdownComponent implements OnInit{
   }
 
   startUpdatingTime() {
-    interval(1000).subscribe(() => {
+    this.intervalSubscription = interval(1000).subscribe(() => {
       this.rideService.getTime().pipe(
         catchError(error => {
-          this.toastr.error('Failed to get time. Redirecting to profile.');
+          this.loadUserProfile()
+          if (this.user) {
+            this.user.busy = false;
+            this.accountService.setCurrentUser(this.user);
+          }
+          if (this.modalRef) {
+            this.modalRef.hide();
+          }
+          if (this.intervalSubscription) {
+            this.intervalSubscription.unsubscribe();
+            this.intervalSubscription = null;
+          }
+          if (this.user?.roles.includes('User')) {
+            this.toastr.info('Ride is over. You can now rate your driver.');
+            this.router.navigate(['/rating', this.currentRide?.driverUsername])
+          } else {
+            this.toastr.info('Ride is over. Redirecting to profile.');
+            this.router.navigateByUrl('/profile')
+          }
           throw error;
         })
       ).subscribe({
@@ -64,9 +84,27 @@ export class CountdownComponent implements OnInit{
         },
         error: (err) => {
           console.error('Error fetching time:', err);
-          this.router.navigateByUrl('/profile')
         }
       });
+    });
+  }
+
+  logout(){
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
+    this.accountService.logout();
+    this.router.navigateByUrl('/')
+  }
+
+  loadInProgressRide() {
+    this.rideService.getRideInProgress().subscribe({
+      next: (ride) => {
+        this.currentRide = ride;
+      },
+      error: (err) => {
+        console.error('Error fetching ride', err);
+      }
     });
   }
 

@@ -22,6 +22,7 @@ public class RideService : IRideService
         _userManager = userManager;
     }
 
+    // Driver
     public async Task<Result<SuccessMessageDto, string>> AcceptRideAsync(string username, int id)
     {
         var user = await _userManager.FindByNameAsync(username);
@@ -96,7 +97,8 @@ public class RideService : IRideService
         ride.Price = _distanceService.CalculatePrice(distanceAndDuration.Distance); 
         ride.Distance = distanceAndDuration.Distance;
         ride.RideDuration = distanceAndDuration.Duration;
-        ride.PickUpTime = rnd.Next(3, 21);
+        //ride.PickUpTime = rnd.Next(3, 21);
+        ride.PickUpTime = 1;
         ride.Status = ERideStatus.PROCESSING;
 
         var rideToAdd = await _rideRepository.AddRide(ride);
@@ -334,5 +336,28 @@ public class RideService : IRideService
         }
 
         return _mapper.Map<RideDto>(ride);
+    }
+
+    public async Task<Result<DetailedRideDto, string>> GetRideInProgressAsync(int id)
+    {
+        var ride = new Ride();
+        var user = await _userRepository.GetUserByIdAsync(id);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        if (roles.Contains("User"))
+        {
+            ride = await _rideRepository.GetRideInProgressForUserAsync(id);
+        } 
+        else 
+        {
+            ride = await _rideRepository.GetRideInProgressForDriverAsync(id);
+        }
+
+        if (ride == null)
+        {
+            return Result.Failure<DetailedRideDto, string>("Ride does not exust!");
+        }
+
+        return _mapper.Map<DetailedRideDto>(ride);
     }
 }

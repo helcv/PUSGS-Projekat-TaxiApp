@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, Observable, tap, switchMap } from 'rxjs';
 import { Ride } from '../_models/ride';
 import { Time } from '../_models/time';
+import { DetailedRide } from '../_models/detailedRide';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,10 @@ export class RideService {
    getCreatedRides(): Observable<Ride[]>{
     const headers = this.accountService.getAuthHeaders();
     return this.http.get<Ride[]>(this.baseUrl + 'ride/created-rides', {headers})
+   }
+
+   getRideInProgress(): Observable<DetailedRide>{
+    const headers = this.accountService.getAuthHeaders();
+    return this.http.get<DetailedRide>(this.baseUrl + 'ride/in-progress', {headers})
    }
 }

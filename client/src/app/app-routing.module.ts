@@ -14,25 +14,28 @@ import { BusyGuard } from './_guards/busy.guard';
 import { NotBusyGuard } from './_guards/not-busy.guard';
 import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
 import { CountdownComponent } from './ride/countdown/countdown.component';
+import { RatingsComponent } from './ratings/ratings.component';
 
 
 const routes: Routes = [
-  {path: '', component: HomeComponent, canActivate: [homeAccessGuard]},
-  {path: '',
+  { path: '', component: HomeComponent, canActivate: [homeAccessGuard] },
+  {
+    path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
     children: [
-      {path: 'active', component: ActiveRideComponent, canActivate: [BusyGuard]},
-      {path: 'countdown', component: CountdownComponent, canActivate: [BusyGuard]},
-      {path: 'profile', component: ProfileComponent, canActivate: [NotBusyGuard]},
-      {path: 'ride', component: CreateRideComponent, canActivate: [NotBusyGuard]},
-      {path: 'new-rides', component: NewRidesComponent, canActivate: [NotBusyGuard]},
-      {path: 'ride-history', component: RideHistoryComponent, canActivate: [NotBusyGuard]},
-      {path: 'drivers', component: AdminPanelComponent, canActivate: [adminGuard]},
-      {path: 'rides', component: RidesComponent, canActivate: [adminGuard]}
+      { path: 'active', component: ActiveRideComponent, canActivate: [BusyGuard] },
+      { path: 'countdown', component: CountdownComponent, canActivate: [BusyGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [NotBusyGuard] },
+      { path: 'ride', component: CreateRideComponent, canActivate: [NotBusyGuard] },
+      { path: 'new-rides', component: NewRidesComponent, canActivate: [NotBusyGuard] },
+      { path: 'ride-history', component: RideHistoryComponent, canActivate: [NotBusyGuard] },
+      { path: 'drivers', component: AdminPanelComponent, canActivate: [adminGuard] },
+      { path: 'rides', component: RidesComponent, canActivate: [adminGuard] },
+      { path: 'rating/:driverUsername', component: RatingsComponent }
     ]
   },
-  {path: '**', redirectTo: ''}
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

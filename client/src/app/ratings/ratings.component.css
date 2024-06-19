@@ -1,0 +1,18 @@
+.star-rating {
+    font-size: 2rem;
+    color: #d3d3d3;
+    cursor: pointer;
+  }
+  
+  .star-rating .fa-star {
+    color: gold;
+  }
+  
+  .is-invalid {
+    border-color: #dc3545;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+  }
+  

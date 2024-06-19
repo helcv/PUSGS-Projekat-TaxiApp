@@ -25,6 +25,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
 import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
 import { CountdownComponent } from './ride/countdown/countdown.component';
+import { RatingsComponent } from './ratings/ratings.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CountdownComponent } from './ride/countdown/countdown.component';
     RidesComponent,
     ActiveRideComponent,
     NewRidesComponent,
-    CountdownComponent
+    CountdownComponent,
+    RatingsComponent
   ],
   imports: [
     BrowserModule,

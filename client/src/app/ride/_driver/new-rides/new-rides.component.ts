@@ -47,6 +47,7 @@ export class NewRidesComponent implements OnInit {
       next: () => {
         if (this.user) {
           this.user.busy = true;
+          this.accountService.setCurrentUser(this.user);
         }
         this.toastr.success('Ride accepted successfully!');
         this.router.navigateByUrl('/countdown');

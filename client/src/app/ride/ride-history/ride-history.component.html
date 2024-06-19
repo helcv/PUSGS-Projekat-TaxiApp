@@ -21,10 +21,12 @@
         </div>
       </div>
       <div *ngFor="let ride of rides">
-        <div [id]="'collapse'+ride.id" [ngClass]="{'collapse': !isCollapsed[ride.id] && ride.id !== activeRide, 'show': isCollapsed[ride.id] || ride.id === activeRide}">
-          <h3 class="text-center mb-4 fs-3">Ride Information</h3>
+        <div [id]="'collapse'+ride.id" 
+        [collapse]="!isCollapsed[ride.id] && ride.id !== activeRide"
+        [isAnimated]="true">
           <div class="card w-75 mx-auto mb-3 text-center">
             <div class="card-body">
+              <h3 class="text-center mb-4 fs-3">Ride Information</h3>
               <h5 class="card-title">Start Address:</h5>
               <p>{{ ride.startAddress }}</p>
               <h5 class="card-title">Final Address:</h5>
@@ -37,6 +39,8 @@
               <p>{{ ride.rideDuration }}</p>
               <h5 class="card-title">Status:</h5>
               <p>{{ ride.status }}</p>
+              <h5 class="card-title">Travel Mate:</h5>
+              <p>{{ ride?.username }}</p>
               <hr>
             </div>
           </div>

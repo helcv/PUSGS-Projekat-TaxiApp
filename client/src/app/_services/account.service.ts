@@ -89,7 +89,6 @@ export class AccountService {
         user.roles.push(roles);
       }
     }
-
     this.currUserSource.next(user);
   }
   

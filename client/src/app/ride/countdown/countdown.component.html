@@ -9,6 +9,9 @@
           <p><strong>Ride Duration:</strong> {{time?.rideHours}}:{{time?.rideMinutes}}:{{time?.rideSeconds}}</p>
           <p>{{time?.message}}</p>
         </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary" (click)="logout()">Logout</button>
+        </div>
       </div>
     </div>
   </ng-template>

@@ -39,12 +39,16 @@ public class RideRepository : IRideRepository
 
     public async Task<Ride> GetRideInProgressForUserAsync(int userId)
     {
-        return await _context.Rides.FirstOrDefaultAsync(r => r.UserId == userId && r.Status == ERideStatus.IN_PROGRESS);
+        return await _context.Rides
+            .Include(r => r.Driver)
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.Status == ERideStatus.IN_PROGRESS);
     }
 
     public async Task<Ride> GetRideInProgressForDriverAsync(int userId)
     {
-        return await _context.Rides.FirstOrDefaultAsync(r => r.DriverId == userId && r.Status == ERideStatus.IN_PROGRESS);
+        return await _context.Rides
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.DriverId == userId && r.Status == ERideStatus.IN_PROGRESS);
     }
 
     public async Task<List<CompleteRideDto>> GetCompletedRidesAsync(int id, bool isDriver)

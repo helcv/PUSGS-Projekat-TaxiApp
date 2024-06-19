@@ -219,10 +219,6 @@ public class AccountService : IAccountService
     {
         var user = await _userRepo.GetUserByIdAsync(id);
 
-        /*if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
-        {
-            return Result.Failure<UserDto, string>("You are not verified");
-        } */
         if (user.VerificationStatus == EVerificationStatus.DENIED)
         {
             return Result.Failure<UserDto, string>("You are not allowed");

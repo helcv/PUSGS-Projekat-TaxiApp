@@ -132,6 +132,7 @@ export class CreateRideComponent implements AfterViewInit {
           this.toastr.success('Ride requested successfully!');
           if (this.user) {
             this.user.busy = true;
+            this.accountService.setCurrentUser(this.user);
           }
           this.router.navigate(['/active'], { queryParams: { rideId: this.createdRide?.id } });
           this.rideModalRef?.hide();

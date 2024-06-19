@@ -95,6 +95,19 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
+    [HttpGet("in-progress")]
+    [Authorize(Roles = "Driver, User")]
+    public async Task<IActionResult> GetRideInProgress()
+    {
+        var currUser = _contextAccessor.HttpContext.User;
+        var currId = currUser.GetUserId();
+
+        var result = await _rideService.GetRideInProgressAsync(currId);
+        if (!result.IsSuccess) return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+
     [HttpGet("created")]
     [Authorize(Roles = " User")]
     public async Task<IActionResult> GetCreatedRideForUser()

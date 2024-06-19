@@ -7,4 +7,5 @@ export interface Ride {
     distance: string
     rideDuration: string
     status: string
+    username:string
   }

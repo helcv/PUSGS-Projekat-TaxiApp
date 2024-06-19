@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Driver } from '../_models/driver';
 import { AccountService } from './account.service';
-import { Ride } from '../_models/ride';
 import { DetailedRide } from '../_models/detailedRide';
 
 @Injectable({
