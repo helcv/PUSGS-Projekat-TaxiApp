@@ -16,10 +16,9 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup = new FormGroup({});
   maxDate: Date = new Date();
   validationErrors: string[] | undefined;
+  selectedFile: File | null = null;
 
-
-  constructor(private accountService: AccountService, private router: Router, private toastr: ToastrService) {
-  }
+  constructor(private accountService: AccountService, private router: Router, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -37,32 +36,54 @@ export class RegisterComponent implements OnInit {
       lastname: new FormControl('', Validators.required),
       role: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
-      dateOfBirth: new FormControl('', Validators.required)
+      dateOfBirth: new FormControl('', Validators.required),
+      photo: new FormControl(null, Validators.required)
     });
     this.registerForm.controls['password'].valueChanges.subscribe({
       next: () => this.registerForm.controls['confirmPassword'].updateValueAndValidity()
-    })
+    });
   }
 
   matchValues(matchTo: string) : ValidatorFn {
     return (control: AbstractControl) => {
-      return control.value === control.parent?.get(matchTo)?.value ? null : {notMatching: true}
+      return control.value === control.parent?.get(matchTo)?.value ? null : { notMatching: true };
+    }
+  }
+
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      this.registerForm.controls['photo'].setValue(this.selectedFile);
     }
   }
 
   register() {
     const dob = this.getDateOnly(this.registerForm.controls['dateOfBirth'].value);
-    const values = {...this.registerForm.value, dateOfBirth: dob}
-    console.log('Form Submitted', dob);
-    this.accountService.register(values).subscribe({
+    const values = { ...this.registerForm.value, dateOfBirth: dob };
+
+    const formData: FormData = new FormData();
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+
+    if (this.selectedFile) {
+      formData.append('photo', this.selectedFile, this.selectedFile.name);
+    } else {
+      this.toastr.error('Photo is required.');
+      return;
+    }
+
+    this.accountService.register(formData).subscribe({
       next: response => {
-        this.router.navigateByUrl('/profile')
+        this.toastr.success('Registration successful');
+        this.router.navigateByUrl('/profile');
       },
       error: error => {
-        this.toastr.error(error.error),
-        this.validationErrors = error
+        console.error('Registration error:', error);
+        this.validationErrors = error;
+        this.toastr.error('Registration failed');
       }
-    }) 
+    });
   }
 
   cancel() {
@@ -73,7 +94,7 @@ export class RegisterComponent implements OnInit {
     if (!dob) return;
 
     let theDob = new Date(dob);
-    return new Date(theDob.setMinutes(theDob.getMinutes()-theDob.getTimezoneOffset()))
-      .toISOString().slice(0,10);
+    return new Date(theDob.setMinutes(theDob.getMinutes() - theDob.getTimezoneOffset()))
+      .toISOString().slice(0, 10);
   }
 }

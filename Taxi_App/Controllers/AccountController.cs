@@ -41,7 +41,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterDto registerDto)
+    public async Task<IActionResult> Register([FromForm] RegisterDto registerDto)
     {
         var validationResults = new List<ValidationResult>();
         var isValid = Validator.TryValidateObject(registerDto, new ValidationContext(registerDto), validationResults, true);

@@ -4,7 +4,7 @@
   <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Username'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['email'])" [label]="'Email'" [type]="'email'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'" [type]="'password'"></app-text-input>
-  <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confirm Password'" [type]="'password'" ></app-text-input>
+  <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confirm Password'" [type]="'password'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['name'])" [label]="'Name'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['lastname'])" [label]="'Lastname'"></app-text-input>
   <app-text-input [formControl]="$any(registerForm.controls['address'])" [label]="'Address'"></app-text-input>
@@ -31,6 +31,11 @@
     </div>
   </div>
 
+  <div class="mb-3">
+    <label for="photo">Profile Photo:</label>
+    <input type="file" id="photo" (change)="onFileChange($event)" class="form-control mt-2" accept="image/*">
+  </div>
+
   <div class="row" *ngIf="validationErrors">
     <ul class="text-danger">
         <li *ngFor="let error of validationErrors">
@@ -40,7 +45,7 @@
   </div>
 
   <div class="text-center">
-      <button [disabled]="!registerForm.valid" class="btn btn-success me-2" type="submit">Register</button>
-      <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
-    </div>
+    <button [disabled]="!registerForm.valid" class="btn btn-success me-2" type="submit">Register</button>
+    <button class="btn btn-default" type="button" (click)="cancel()">Cancel</button>
+  </div>
 </form>
