@@ -26,6 +26,7 @@ import { ActiveRideComponent } from './ride/active-ride/active-ride.component';
 import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
 import { CountdownComponent } from './ride/countdown/countdown.component';
 import { RatingsComponent } from './ratings/ratings.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { RatingsComponent } from './ratings/ratings.component';
     ActiveRideComponent,
     NewRidesComponent,
     CountdownComponent,
-    RatingsComponent
+    RatingsComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -88,28 +88,28 @@ public class AccountService : IAccountService
 
     public async Task<Result<TokenDto, string>> Login(LoginDto loginDto)
     {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if (user == null)
-            {
-                return Result.Failure<TokenDto, string>("Invalid email address.");
-            }
-            if (user.VerificationStatus == EVerificationStatus.DENIED)
-            {
-                return Result.Failure<TokenDto, string>("Verification denied.");
-            }      
+        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        if (user == null)
+        {
+            return Result.Failure<TokenDto, string>("Invalid email address.");
+        }
+        if (user.VerificationStatus == EVerificationStatus.DENIED)
+        {
+            return Result.Failure<TokenDto, string>("Verification denied.");
+        }
 
-            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
-            if (!result)
-            {
-                return Result.Failure<TokenDto, string>("Invalid password.");
-            }  
+        var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+        if (!result)
+        {
+            return Result.Failure<TokenDto, string>("Invalid password.");
+        }
 
-            var token = new TokenDto
-            {
-                Token = await _tokenService.CreateToken(user)
-            };
+        var token = new TokenDto
+        {
+            Token = await _tokenService.CreateToken(user)
+        };
 
-            return Result.Success<TokenDto, string>(token);
+        return Result.Success<TokenDto, string>(token);
     }
 
     public async Task<Result<SuccessCreateDto, IEnumerable<string>>> RegisterAsync(RegisterDto registerDto)

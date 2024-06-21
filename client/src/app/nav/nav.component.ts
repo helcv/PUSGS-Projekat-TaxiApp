@@ -4,6 +4,8 @@ import { Observable, of, take } from 'rxjs';
 import { User } from '../_models/user';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { NgFor } from '@angular/common';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-nav',
@@ -27,7 +29,7 @@ export class NavComponent implements OnInit {
     
   }
 
-  login() {
+  login(form: NgForm) {
     this.accountService.login(this.model).subscribe({
       next: (response: any) => {
         console.log(this.user?.busy);
@@ -38,6 +40,7 @@ export class NavComponent implements OnInit {
         else{
           this.router.navigateByUrl('/profile');
         }
+        form.reset()
       },
       error: error => {
         this.toastr.error(error.error);

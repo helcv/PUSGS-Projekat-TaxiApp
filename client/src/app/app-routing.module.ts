@@ -15,6 +15,8 @@ import { NotBusyGuard } from './_guards/not-busy.guard';
 import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component';
 import { CountdownComponent } from './ride/countdown/countdown.component';
 import { RatingsComponent } from './ratings/ratings.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
 
 const routes: Routes = [
@@ -27,6 +29,9 @@ const routes: Routes = [
       { path: 'active', component: ActiveRideComponent, canActivate: [BusyGuard] },
       { path: 'countdown', component: CountdownComponent, canActivate: [BusyGuard] },
       { path: 'profile', component: ProfileComponent, canActivate: [NotBusyGuard] },
+      { path: 'profile/edit', component: EditProfileComponent, 
+        canActivate: [NotBusyGuard], 
+        canDeactivate: [preventUnsavedChangesGuard] },
       { path: 'ride', component: CreateRideComponent, canActivate: [NotBusyGuard] },
       { path: 'new-rides', component: NewRidesComponent, canActivate: [NotBusyGuard] },
       { path: 'ride-history', component: RideHistoryComponent, canActivate: [NotBusyGuard] },

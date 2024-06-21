@@ -69,6 +69,11 @@ export class AccountService {
     this.currUserSource.next(null);
   }
 
+  editProfile(model: any): Observable<string>{
+    const headers = this.getAuthHeaders();
+    return this.http.put<string>(this.baseUrl + 'account', model, {headers})
+   }
+
   setCurrentUser(user: User) {
     const tokenString = localStorage.getItem('token');
     if (tokenString) {

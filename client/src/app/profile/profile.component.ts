@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -11,14 +12,24 @@ export class ProfileComponent implements OnInit {
   user: User | null = null;
   
   constructor(private accountService: AccountService) {
-    this.accountService.currentUser$.subscribe(user => {
-      this.user = user;
-    });
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => this.user = user
+    })
   }
 
   ngOnInit(): void {
-    this.accountService.currentUser$.subscribe(user => {
-      this.user = user;
+    this.loadUserProfile()
+  }
+
+  loadUserProfile(): void {
+    if(this.user)
+    this.accountService.getUserProfileById(this.user?.id).subscribe({
+      next: (user: User | null) => {
+        this.user = user;
+      },
+      error: (error) => {
+        console.error('Error fetching user profile:', error);
+      }
     });
   }
 }
