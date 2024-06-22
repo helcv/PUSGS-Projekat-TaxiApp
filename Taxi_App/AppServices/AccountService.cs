@@ -48,6 +48,8 @@ public class AccountService : IAccountService
         userToRegister.UserName = parts[0];
         userToRegister.Email = payload.Email;
         userToRegister.PhotoUrl = payload.Picture;
+        userToRegister.Name = payload.GivenName;
+        userToRegister.Lastname = payload.FamilyName;
 
         var result = await _userManager.CreateAsync(userToRegister, googleRegisterDto.Password);
         if (!result.Succeeded) 
@@ -84,6 +86,32 @@ public class AccountService : IAccountService
         };
 
         return Result.Success<SuccessCreateDto, IEnumerable<string>>(successCreateDto);
+    }
+
+    public async Task<Result<TokenDto, string>> GoogleLogin(string googleToken)
+    {
+        var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken);
+
+        if (payload.Audience.ToString() != _googleCredentials.Value){
+            throw new InvalidJwtException("Invalid token");
+        }
+
+        var user = await _userManager.FindByEmailAsync(payload.Email);
+        if (user == null)
+        {
+            return Result.Failure<TokenDto, string>("Invalid email address.");
+        }
+        if (user.VerificationStatus == EVerificationStatus.DENIED)
+        {
+            return Result.Failure<TokenDto, string>("Verification denied.");
+        }
+
+        var token = new TokenDto
+        {
+            Token = await _tokenService.CreateToken(user)
+        };
+
+        return Result.Success<TokenDto, string>(token);
     }
 
     public async Task<Result<TokenDto, string>> Login(LoginDto loginDto)

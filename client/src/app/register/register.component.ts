@@ -1,10 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { User } from '../_models/user';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidators } from '../_validators/custom-validators';
 import { ToastrService } from 'ngx-toastr';
+
+declare const google: any;
 
 @Component({
   selector: 'app-register',
@@ -17,12 +19,32 @@ export class RegisterComponent implements OnInit {
   maxDate: Date = new Date();
   validationErrors: string[] | undefined;
   selectedFile: File | null = null;
+  googleToken: string | null = null;
 
-  constructor(private accountService: AccountService, private router: Router, private toastr: ToastrService) {}
+  constructor(private accountService: AccountService, 
+    private router: Router, 
+    private toastr: ToastrService,
+    private ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 16);
+
+    google.accounts.id.initialize({
+      client_id: '1004079564257-u861m67mkdlcoqar7drc1hflub6oevpc.apps.googleusercontent.com',
+      callback: (response: any) => this.handleCredentialResponse(response)
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('google-button'),
+      { theme: 'outline', size: 'large' }
+    );
+  }
+
+  handleCredentialResponse(response: any) {
+    this.googleToken = response.credential;
+    this.ngZone.run(() => {
+      this.router.navigate(['/complete-registration'], { state: { googleToken: this.googleToken } });
+    });
   }
 
   initializeForm() {

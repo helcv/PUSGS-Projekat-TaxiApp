@@ -9,10 +9,6 @@ public class GoogleRegisterDto
     [Required]
     public string Password { get; set; }
     [Required]
-    public string Name { get; set; }
-    [Required]
-    public string Lastname { get; set; }
-    [Required]
     public DateOnly? DateOfBirth { get; set; }
     [Required(ErrorMessage = "Address is required")]
     public string Address { get; set; }

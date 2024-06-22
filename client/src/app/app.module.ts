@@ -27,6 +27,7 @@ import { NewRidesComponent } from './ride/_driver/new-rides/new-rides.component'
 import { CountdownComponent } from './ride/countdown/countdown.component';
 import { RatingsComponent } from './ratings/ratings.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { GoogleRegisterComponent } from './google-register/google-register.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
     NewRidesComponent,
     CountdownComponent,
     RatingsComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    GoogleRegisterComponent,
   ],
   imports: [
     BrowserModule,

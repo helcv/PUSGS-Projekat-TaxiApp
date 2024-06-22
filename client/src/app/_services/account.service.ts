@@ -40,8 +40,54 @@ export class AccountService {
     );
   }
 
+  googleLogin(model: any) {
+    return this.http.post<Token>(this.baseUrl + 'account/login-google', model).pipe(
+      switchMap((response: Token) => {
+        const token = response;
+        if (token) {
+          localStorage.setItem('token', JSON.stringify(token));
+          return this.getUserProfile().pipe(
+            tap(user => {
+              if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+                this.setCurrentUser(user);
+              }
+            })
+          );
+        }
+        return of(null);
+      }),
+      tap(user => {
+        this.currUserSource.next(user);
+      })
+    );
+  }
+
   register(model: any){
     return this.http.post<Token>(this.baseUrl + "account/register", model).pipe(
+      switchMap((response: Token) => {
+        const token = response;
+        if (token) {
+          localStorage.setItem('token', JSON.stringify(token));
+          return this.getUserProfile().pipe(
+            tap(user => {
+              if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+                this.setCurrentUser(user);
+              }
+            })
+          );
+        }
+        return of(null);
+      }),
+      tap(user => {
+        this.currUserSource.next(user);
+      })
+    )
+  }
+
+  googleRegister(model: any){
+    return this.http.post<Token>(this.baseUrl + "account/signin-google", model).pipe(
       switchMap((response: Token) => {
         const token = response;
         if (token) {

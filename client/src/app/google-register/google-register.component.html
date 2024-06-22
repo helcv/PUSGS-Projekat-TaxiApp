@@ -1,0 +1,29 @@
+<div *ngIf="!isLoading" class="container">
+    <form [formGroup]="registrationForm" (ngSubmit)="register()" autocomplete="off">
+        <h2 class="text-center text-primary">Complete registration</h2>
+        <hr>
+        <app-text-input [formControl]="$any(registrationForm.controls['password'])" [label]="'Password'"
+            [type]="'password'"></app-text-input>
+        <app-text-input [formControl]="$any(registrationForm.controls['confirmPassword'])" [label]="'Confirm Password'"
+            [type]="'password'"></app-text-input>
+        <app-text-input [formControl]="$any(registrationForm.controls['address'])" [label]="'Address'"></app-text-input>
+        <app-date-picker [formControl]="$any(registrationForm.controls['dateOfBirth'])" [label]="'Date of Birth'"
+            [maxDate]="maxDate"></app-date-picker>
+
+        <div class="mb-3 d-flex justify-content-between text-center">
+            <label>Who are you?</label>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" formControlName="role" value="User" id="roleUser">
+                <label class="form-check-label" for="roleUser">User</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" formControlName="role" value="Driver" id="roleDriver">
+                <label class="form-check-label" for="roleDriver">Driver</label>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button [disabled]="!registrationForm.valid" class="btn btn-success me-2" type="submit">Register</button>
+        </div>
+    </form>
+</div>

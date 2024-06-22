@@ -17,10 +17,12 @@ import { CountdownComponent } from './ride/countdown/countdown.component';
 import { RatingsComponent } from './ratings/ratings.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { GoogleRegisterComponent } from './google-register/google-register.component';
 
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [homeAccessGuard] },
+  { path: 'complete-registration', component: GoogleRegisterComponent },
   {
     path: '',
     runGuardsAndResolvers: 'always',

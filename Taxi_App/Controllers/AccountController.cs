@@ -59,7 +59,7 @@ public class AccountController : BaseApiController
     }
 
     [HttpPost("signin-google")]
-    public async Task<IActionResult> GoogleRegister(GoogleRegisterDto googleRegisterDto)
+    public async Task<IActionResult> GoogleRegister([FromForm]GoogleRegisterDto googleRegisterDto)
     {
         var result = await _accountService.GoogleRegisterAsync(googleRegisterDto);
         if (result.IsFailure) return BadRequest(result.Error);
@@ -76,6 +76,14 @@ public class AccountController : BaseApiController
         return Ok(result.Value);
     }
 
+    [HttpPost("login-google")]
+    public async Task<IActionResult> GoogleLogin(GoogleTokenDto tokenDto)
+    {
+        var result = await _accountService.GoogleLogin(tokenDto.GoogleToken);
+        if (result.IsFailure) return Unauthorized(result.Error);
+
+        return Ok(result.Value);
+    }
 
     [HttpPut]
     [Authorize]
