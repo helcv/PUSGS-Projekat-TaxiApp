@@ -110,7 +110,7 @@ export class CountdownComponent implements OnInit{
 
   loadUserProfile(): void {
     if(this.user)
-    this.accountService.getUserProfileById(this.user?.id).subscribe({
+    this.accountService.getUserProfile().subscribe({
       next: (user: User | null) => {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));

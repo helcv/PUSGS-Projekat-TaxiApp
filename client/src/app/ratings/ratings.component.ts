@@ -51,7 +51,7 @@ export class RatingsComponent implements OnInit {
       console.log(ratingData);
 
 
-      this.ratingService.createRide(ratingData).subscribe(
+      this.ratingService.createRating(ratingData).subscribe(
         response => {
           console.log('Response from backend:', response);
           this.toastr.success("Rating added successfully!")

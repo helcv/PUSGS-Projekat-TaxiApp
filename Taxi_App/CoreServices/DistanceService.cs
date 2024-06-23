@@ -91,7 +91,16 @@ public class DistanceService : IDistanceService
     public float CalculatePrice(string distance)
     {
         var distanceParts = distance.Split(' ');
-        float distanceKm = float.Parse(distanceParts[0]);
+        float distanceKm;
+
+        if (distanceParts[1] == "m")
+        {
+            distanceKm = float.Parse(distanceParts[0]) / 1000;
+        } 
+        else 
+        {
+            distanceKm = float.Parse(distanceParts[0]);
+        }
         float totalPrice = (float)Math.Round(distanceKm * 0.75, 3);
 
         return totalPrice;  //price in €

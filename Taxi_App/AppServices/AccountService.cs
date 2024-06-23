@@ -251,10 +251,6 @@ public class AccountService : IAccountService
         {
             return Result.Failure<UserDto, string>("You are not allowed");
         }
-        if (user.IsBlocked == true)
-        {
-            return Result.Failure<UserDto, string>("You are blocked");
-        }
 
         var userDto = new UserDto
         {
@@ -267,7 +263,8 @@ public class AccountService : IAccountService
             Age = user.DateOfBirth.CalculateAge(),
             Address = user.Address,
             VerificationStatus = user.VerificationStatus.ToString(),
-            Busy = user.Busy
+            Busy = user.Busy,
+            IsBlocked = user.IsBlocked
         };
 
         return Result.Success<UserDto, string>(userDto);

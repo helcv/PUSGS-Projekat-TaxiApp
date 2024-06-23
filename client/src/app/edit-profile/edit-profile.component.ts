@@ -65,7 +65,7 @@ export class EditProfileComponent implements OnInit {
 
   loadUserProfile(): void {
     if(this.user)
-    this.accountService.getUserProfileById(this.user?.id).subscribe({
+    this.accountService.getUserProfile().subscribe({
       next: (user: User | null) => {
         this.user = user;
         this.updateForm(this.user)

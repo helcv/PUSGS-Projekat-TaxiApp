@@ -40,8 +40,10 @@ export class HasRoleDirective implements OnInit, OnChanges {
 
   private updateView(): void {
     if (
-      this.user.roles.some(r => this.appHasRole.includes(r)) && this.user.verificationStatus === 'ACCEPTED' &&
-      this.user['busy'] === this.busy
+      this.user.roles.some(r => this.appHasRole.includes(r)) && 
+      this.user.verificationStatus === 'ACCEPTED' &&
+      this.user['busy'] === this.busy &&
+      this.user.isBlocked === false
     ) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     } else {

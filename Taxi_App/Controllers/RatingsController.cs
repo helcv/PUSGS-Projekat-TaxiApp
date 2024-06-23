@@ -1,15 +1,14 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Taxi_App;
 
-public class RatingController : BaseApiController
+public class RatingsController : BaseApiController
 {
     private readonly IRatingService _ratingService;
     private readonly IHttpContextAccessor _contextAccessor;
 
-    public RatingController(IRatingService ratingService, IHttpContextAccessor httpContextAccessor)
+    public RatingsController(IRatingService ratingService, IHttpContextAccessor httpContextAccessor)
     {
         _contextAccessor = httpContextAccessor;
         _ratingService = ratingService;

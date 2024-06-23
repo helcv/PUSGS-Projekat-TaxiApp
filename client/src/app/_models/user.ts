@@ -10,4 +10,5 @@ export interface User {
   roles: string[];
   verificationStatus: string;
   busy: boolean;
+  isBlocked: boolean;
 }

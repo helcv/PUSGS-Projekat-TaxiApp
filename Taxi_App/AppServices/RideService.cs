@@ -286,7 +286,7 @@ public class RideService : IRideService
         return Result.Success<SuccessMessageDto, string>(new SuccessMessageDto { Message = "Ride successfully requested."});
     }
 
-    public async Task<Result<SuccessMessageDto, string>> DenyRideRequestAsync(string username, int id)
+    public async Task<Result<SuccessMessageDto, string>> DeclineRideRequestAsync(string username, int id)
     {
         var user = await _userManager.FindByNameAsync(username);
 

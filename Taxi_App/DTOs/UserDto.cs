@@ -12,4 +12,5 @@ public class UserDto
     public string Address { get; set; }
     public string VerificationStatus { get; set; }
     public bool Busy { get; set; }
+    public bool IsBlocked { get; set; }
 }

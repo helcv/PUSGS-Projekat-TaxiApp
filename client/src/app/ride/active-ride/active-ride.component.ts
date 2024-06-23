@@ -18,7 +18,6 @@ export class ActiveRideComponent implements OnInit{
   
   constructor(private accountService: AccountService, 
     private router: Router, 
-    private route: ActivatedRoute,
     private rideService: RideService) { 
 
     this.accountService.currentUser$.subscribe({
@@ -35,7 +34,7 @@ export class ActiveRideComponent implements OnInit{
 
   loadUserProfile(): void {
     if(this.user)
-    this.accountService.getUserProfileById(this.user?.id).subscribe({
+    this.accountService.getUserProfile().subscribe({
       next: (user: User | null) => {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));

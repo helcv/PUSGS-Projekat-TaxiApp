@@ -1,17 +1,14 @@
-﻿using System.Net;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Taxi_App;
 
-public class RideController : BaseApiController
+public class RidesController : BaseApiController
 {
     private readonly IHttpContextAccessor _contextAccessor;
     private readonly IRideService _rideService;
 
-    public RideController(IRideService rideService, IHttpContextAccessor httpContextAccessor)
+    public RidesController(IRideService rideService, IHttpContextAccessor httpContextAccessor)
     {
         _rideService = rideService;
         _contextAccessor = httpContextAccessor;
@@ -30,7 +27,7 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
-    [HttpPatch("{id}/request-ride")]
+    [HttpPatch("{id}/request")]
     [Authorize(Roles = "User")]
     public async Task<ActionResult> RequestRide(int id)
     {
@@ -43,20 +40,20 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
-    [HttpPatch("{id}/deny-ride")]
+    [HttpDelete("{id}/decline")]
     [Authorize(Roles = "User")]
-    public async Task<ActionResult> DenyRide(int id)
+    public async Task<ActionResult> DeclineRide(int id)
     {
         var currUser = _contextAccessor.HttpContext.User;
         var currUsername = currUser.GetUsername();
 
-        var result = await _rideService.DenyRideRequestAsync(currUsername, id);
+        var result = await _rideService.DeclineRideRequestAsync(currUsername, id);
         if (!result.IsSuccess) return BadRequest(result.Error);
 
         return Ok(result.Value);
     }
 
-    [HttpPatch("{id}/accept-ride")]
+    [HttpPatch("{id}/accept")]
     [Authorize(Roles = "Driver")]
     public async Task<ActionResult> AcceptRide(int id)
     {
@@ -69,7 +66,7 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
-    [HttpGet("created-rides")]
+    [HttpGet("created")]
     [Authorize(Roles = "Driver")]
     public async Task<ActionResult<List<RideDto>>> GetAllCreatedRides()
     {
@@ -82,7 +79,7 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
-    [HttpGet("completed-rides")]
+    [HttpGet("completed")]
     [Authorize(Roles = "Driver, User")]
     public async Task<ActionResult<List<CompleteRideDto>>> GetCompletedRides()
     {
@@ -108,7 +105,7 @@ public class RideController : BaseApiController
         return Ok(result.Value);
     }
 
-    [HttpGet("created")]
+    [HttpGet("created-ride")]
     [Authorize(Roles = " User")]
     public async Task<IActionResult> GetCreatedRideForUser()
     {

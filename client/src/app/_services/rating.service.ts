@@ -13,8 +13,8 @@ export class RatingService {
 
   constructor(private accountService: AccountService, private http: HttpClient) { }
 
-  createRide(rating: Rating): Observable<string>{
+  createRating(rating: Rating): Observable<string>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.post<string>(this.baseUrl + 'rating', rating, {headers})
+    return this.http.post<string>(this.baseUrl + 'ratings', rating, {headers})
    }
 }

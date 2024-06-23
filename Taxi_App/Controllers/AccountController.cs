@@ -1,4 +1,3 @@
-
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,17 +22,6 @@ public class AccountController : BaseApiController
         var currId = currUser.GetUserId();
 
         var result = await _accountService.GetProfileAsync(currId);
-        if (result.IsFailure) return BadRequest(result.Error);
-        
-        return Ok(result.Value);
-
-    }
-
-    [Authorize]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetProfileById(int id)
-    {
-        var result = await _accountService.GetProfileAsync(id);
         if (result.IsFailure) return BadRequest(result.Error);
         
         return Ok(result.Value);

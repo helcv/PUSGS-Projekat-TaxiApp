@@ -19,24 +19,24 @@ export class RideService {
 
    getTime(): Observable<Time>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.get<Time>(this.baseUrl + 'ride/remaining-time', {headers});
+    return this.http.get<Time>(this.baseUrl + 'rides/remaining-time', {headers});
    }
 
    getCreatedRide(): Observable<Ride>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.get<Ride>(this.baseUrl + 'ride/created', {headers});
+    return this.http.get<Ride>(this.baseUrl + 'rides/created-ride', {headers});
    }
 
   //User
    createRide(model: any): Observable<Ride>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.post<Ride>(this.baseUrl + 'ride', model, {headers})
+    return this.http.post<Ride>(this.baseUrl + 'rides', model, {headers})
    }
 
    //User
    requestRide(rideId: number): Observable<any> {
     const headers = this.accountService.getAuthHeaders();
-    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/request-ride`, {}, {headers}).pipe(
+    return this.http.patch<any>(`${this.baseUrl}rides/${rideId}/request`, {}, {headers}).pipe(
       switchMap(() => {
         return this.accountService.getUserProfile();
       })
@@ -46,27 +46,27 @@ export class RideService {
   //User
   declineRide(rideId: number): Observable<any> {
     const headers = this.accountService.getAuthHeaders();
-    return this.http.patch<any>(`${this.baseUrl}ride/${rideId}/deny-ride`, {}, {headers});
+    return this.http.delete<any>(`${this.baseUrl}rides/${rideId}/decline`, {headers});
   }
 
   //Driver
   acceptRide(rideId: number): Observable<Ride>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.patch<Ride>(`${this.baseUrl}ride/${rideId}/accept-ride`, {}, { headers });
+    return this.http.patch<Ride>(`${this.baseUrl}rides/${rideId}/accept`, {}, { headers });
    }
 
    getCompletedRides(): Observable<Ride[]>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.get<Ride[]>(this.baseUrl + 'ride/completed-rides', {headers})
+    return this.http.get<Ride[]>(this.baseUrl + 'rides/completed', {headers})
    }
 
    getCreatedRides(): Observable<Ride[]>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.get<Ride[]>(this.baseUrl + 'ride/created-rides', {headers})
+    return this.http.get<Ride[]>(this.baseUrl + 'rides/created', {headers})
    }
 
    getRideInProgress(): Observable<DetailedRide>{
     const headers = this.accountService.getAuthHeaders();
-    return this.http.get<DetailedRide>(this.baseUrl + 'ride/in-progress', {headers})
+    return this.http.get<DetailedRide>(this.baseUrl + 'rides/in-progress', {headers})
    }
 }
