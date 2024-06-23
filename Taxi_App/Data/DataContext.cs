@@ -16,6 +16,7 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
     //public DbSet<User> Users { get; set; }
     public DbSet<Ride> Rides { get; set; }
     public DbSet<Rating> Ratings { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -57,5 +58,15 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
             .HasForeignKey(r => r.DriverId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
+
+        builder.Entity<Message>()
+            .HasOne(u => u.Recipient)
+            .WithMany(m => m.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Message>()
+            .HasOne(u => u.Sender)
+            .WithMany(m => m.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

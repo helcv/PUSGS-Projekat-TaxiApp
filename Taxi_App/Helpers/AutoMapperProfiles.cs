@@ -21,6 +21,10 @@ public class AutoMapperProfiles : Profile
             .ReverseMap();
         CreateMap<User, BlockDriverDto>().ReverseMap();
         CreateMap<Rating, RatingDto>().ReverseMap();
+        CreateMap<Message, MessageDto>()
+            .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src => src.Sender.PhotoUrl))
+            .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src => src.Recipient.PhotoUrl))
+            .ReverseMap();
     }
             
 }

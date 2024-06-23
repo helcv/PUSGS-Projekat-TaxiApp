@@ -18,4 +18,6 @@ public class User : IdentityUser<int>
     public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     public ICollection<Ride> CreatedRides { get; set; } = new List<Ride>();
     public ICollection<Ride> AcceptedRides { get; set; } = new List<Ride>();
+    public ICollection<Message> MessagesSent { get; set; }
+    public ICollection<Message> MessagesReceived { get; set; }
 }
