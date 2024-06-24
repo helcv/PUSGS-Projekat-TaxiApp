@@ -70,6 +70,6 @@ public class RatingService : IRatingService
                 return Result.Success<SuccessMessageDto, string>(new SuccessMessageDto { Message = "Rate successfully created."});
             }
         }
-        return Result.Failure<SuccessMessageDto, string>("You can not rate this user.");
+        return Result.Failure<SuccessMessageDto, string>("You cannot rate this user.");
     }
 }

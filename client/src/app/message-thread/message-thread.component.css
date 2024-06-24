@@ -15,6 +15,29 @@
 }
 
 .message-container {
-    max-height: 600px;
     overflow-y: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .message-container {
+        max-height: 60vh;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .message-container {
+        max-height: 70vh;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .message-container {
+        max-height: 600px;
+    }
+}
+
+.recipient-photo {
+    max-height: 80px;
+    border: 2px solid black;
+    border-radius: 50%;
 }

@@ -79,10 +79,16 @@ public class MessageService : IMessageService
         return Result.Success<IEnumerable<MessageDto>, string>(messages);
     }
 
-    public async Task<IEnumerable<MessageDto>> GetMessageThreadAsync(string currUsername, string recipientUsername)
+    public async Task<Result<IEnumerable<MessageDto>, string>> GetMessageThreadAsync(string currUsername, string recipientUsername)
     {
+        var recipient = await _userRepository.GetUserByUsernameAsync(recipientUsername);
+        if (recipient == null || recipientUsername == currUsername)
+        {
+            return Result.Failure<IEnumerable<MessageDto>, string>("Recipient does not exist");
+        }
+
         var messages = await _messageRepository.GetMessageThreadAsync(currUsername, recipientUsername);
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
+        return Result.Success<IEnumerable<MessageDto>, string>(_mapper.Map<IEnumerable<MessageDto>>(messages));
     }
 
     public async Task<Result<SuccessMessageDto, string>> DeleteMessageAsync(int id, string username)

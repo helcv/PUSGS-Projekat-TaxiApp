@@ -47,7 +47,11 @@ public class MessagesController : BaseApiController
         var currUser = _httpContextAccessor.HttpContext.User;
         var currUsername = currUser.GetUsername();
 
-        return Ok(await _messageService.GetMessageThreadAsync(currUsername, username));
+        var result = await _messageService.GetMessageThreadAsync(currUsername, username);
+        if (!result.IsSuccess) return BadRequest(result.Error);
+
+        return Ok(result.Value);
+
     }
 
     [HttpDelete("{id}")]

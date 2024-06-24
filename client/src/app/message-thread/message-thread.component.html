@@ -1,4 +1,8 @@
 <div class="container">
+    <div class="recipient-info text-center mb-3">
+        <img class="rounded-circle recipient-photo" [src]="recipientPhoto || 'assets/user.jpg'" alt="Recipient">
+        <span class="ms-2"><strong>{{ username }}</strong></span>
+    </div>
 <div class="card">
     <div class="card-body">
         <div *ngIf="messages.length === 0">

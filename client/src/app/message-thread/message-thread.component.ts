@@ -4,8 +4,9 @@ import { take } from 'rxjs';
 import { User } from '../_models/user';
 import { Message } from '../_models/message';
 import { MessageService } from '../_services/message.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-message-thread',
@@ -19,9 +20,14 @@ export class MessageThreadComponent implements OnInit{
   messages: Message[] = [];
   username: string = '';
   messageContent = '';
+  recipientPhoto = '';
 
-  constructor(private accountService: AccountService, private messageService: MessageService, private route: ActivatedRoute) {
-
+  constructor(private accountService: AccountService, 
+    private messageService: MessageService, 
+    private route: ActivatedRoute,
+    private router: Router,
+    private toastr: ToastrService) {
+    
   }
 
   ngOnInit(): void {
@@ -42,7 +48,14 @@ export class MessageThreadComponent implements OnInit{
   loadMessages() {
     if (this.user && this.username) {
       this.messageService.getMessageThread(this.username).subscribe({
-        next: messages => this.messages = messages
+        next: messages => {
+          this.messages = messages
+          this.storePhoto();
+        },
+        error: err => {
+          this.toastr.error('Unable to load page')
+          this.router.navigateByUrl('/messages')
+        }
       });
     }
   }
@@ -63,5 +76,21 @@ export class MessageThreadComponent implements OnInit{
     try {
         this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
     } catch(err) {}
-}
+  }
+
+  storePhoto(): void {
+    if (!this.messages || this.messages.length === 0) return;
+
+    for (let i = this.messages.length - 1; i >= 0; i--) {
+      const message = this.messages[i];
+      if (message.senderUsername === this.username) {
+        this.recipientPhoto = message.senderPhotoUrl;
+        break;
+      }
+      if (message.recipientUsername === this.username) {
+        this.recipientPhoto = message.recipientPhotoUrl;
+        break;
+      }
+    }
+  }
 }
