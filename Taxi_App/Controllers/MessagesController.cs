@@ -35,12 +35,13 @@ public class MessagesController : BaseApiController
         var currUsername = currUser.GetUsername();
 
         var result = await _messageService.GetMessagesForUserAsync(container, currUsername);
-         if (!result.IsSuccess) return BadRequest(result.Error);
+        if (!result.IsSuccess) return BadRequest(result.Error);
 
         return Ok(result.Value);
     }
 
     [HttpGet("thread/{username}")]
+    [Authorize(Roles = "Driver, User")]
     public async Task<IActionResult> GetMessageThread(string username)
     {
         var currUser = _httpContextAccessor.HttpContext.User;
@@ -49,4 +50,16 @@ public class MessagesController : BaseApiController
         return Ok(await _messageService.GetMessageThreadAsync(currUsername, username));
     }
 
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Driver, User")]
+    public async Task<IActionResult> DeleteMessage(int id)
+    {
+        var currUser = _httpContextAccessor.HttpContext.User;
+        var currUsername = currUser.GetUsername();
+
+        var result = await _messageService.DeleteMessageAsync(id, currUsername);
+        if (!result.IsSuccess) return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
 }

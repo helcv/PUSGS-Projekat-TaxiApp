@@ -18,6 +18,8 @@ import { RatingsComponent } from './ratings/ratings.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { GoogleRegisterComponent } from './google-register/google-register.component';
+import { MessagesComponent } from './messages/messages.component';
+import { MessageThreadComponent } from './message-thread/message-thread.component';
 
 
 const routes: Routes = [
@@ -37,6 +39,8 @@ const routes: Routes = [
       { path: 'ride', component: CreateRideComponent, canActivate: [NotBusyGuard] },
       { path: 'new-rides', component: NewRidesComponent, canActivate: [NotBusyGuard] },
       { path: 'ride-history', component: RideHistoryComponent, canActivate: [NotBusyGuard] },
+      { path: 'messages', component: MessagesComponent, canActivate: [NotBusyGuard] },
+      { path: 'messages/thread/:username', component: MessageThreadComponent, canActivate: [NotBusyGuard] },
       { path: 'drivers', component: AdminPanelComponent, canActivate: [adminGuard] },
       { path: 'rides', component: RidesComponent, canActivate: [adminGuard] },
       { path: 'rating/:driverUsername', component: RatingsComponent }

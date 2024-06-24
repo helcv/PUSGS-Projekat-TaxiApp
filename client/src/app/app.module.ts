@@ -28,6 +28,10 @@ import { CountdownComponent } from './ride/countdown/countdown.component';
 import { RatingsComponent } from './ratings/ratings.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { GoogleRegisterComponent } from './google-register/google-register.component';
+import { MessagesComponent } from './messages/messages.component';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TimeagoModule } from 'ngx-timeago';
+import { MessageThreadComponent } from './message-thread/message-thread.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +53,8 @@ import { GoogleRegisterComponent } from './google-register/google-register.compo
     RatingsComponent,
     EditProfileComponent,
     GoogleRegisterComponent,
+    MessagesComponent,
+    MessageThreadComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,7 +69,9 @@ import { GoogleRegisterComponent } from './google-register/google-register.compo
       positionClass: 'toast-bottom-right'
     }),
     CollapseModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

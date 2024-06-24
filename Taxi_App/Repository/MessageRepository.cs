@@ -38,10 +38,11 @@ public class MessageRepository : IMessageRepository
 
         query = container switch
         {
-            "Inbox" => query.Where(u => u.RecipientUsername == username),
-            "Outbox" => query.Where(u => u.SenderUsername == username),
-            _ => query.Where(u => u.RecipientUsername == username && u.DateRead == null)
+            "Inbox" => query.Where(u => u.RecipientUsername == username && u.RecipientDeleted == false),
+            "Outbox" => query.Where(u => u.SenderUsername == username && u.SenderDeleted == false),
+            _ => query.Where(u => u.RecipientUsername == username && u.RecipientDeleted == false && u.DateRead == null)
         };
+        
 
         return await query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToListAsync();
     }
@@ -53,11 +54,13 @@ public class MessageRepository : IMessageRepository
             .Include(u => u.Recipient)
             .Where(
                 m => m.RecipientUsername == currUserUsername &&
+                m.RecipientDeleted == false &&
                 m.SenderUsername == recipientUsername || 
                 m.RecipientUsername == recipientUsername &&
+                m.SenderDeleted == false &&
                 m.SenderUsername == currUserUsername
             )
-            .OrderByDescending(m => m.MessageSent)
+            .OrderBy(m => m.MessageSent)
             .ToListAsync();
 
         var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currUserUsername).ToList();

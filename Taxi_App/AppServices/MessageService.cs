@@ -23,6 +23,11 @@ public class MessageService : IMessageService
         var sender = await _userRepository.GetUserByUsernameAsync(username);
         var recipient = await _userRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
 
+        if(recipient == null)
+        {
+            return Result.Failure<MessageDto, string>("Recipient does not exist!");
+        }
+
         if(sender.VerificationStatus != EVerificationStatus.ACCEPTED || sender.IsBlocked || sender.Busy)
         {
             return Result.Failure<MessageDto, string>("You are not allowed to send a message!");
@@ -30,7 +35,7 @@ public class MessageService : IMessageService
 
         if(recipient.VerificationStatus != EVerificationStatus.ACCEPTED || recipient.IsBlocked)
         {
-            return Result.Failure<MessageDto, string>("Recipient does not exist!");
+            
         }
 
         if(username == createMessageDto.RecipientUsername)
@@ -78,5 +83,30 @@ public class MessageService : IMessageService
     {
         var messages = await _messageRepository.GetMessageThreadAsync(currUsername, recipientUsername);
         return _mapper.Map<IEnumerable<MessageDto>>(messages);
+    }
+
+    public async Task<Result<SuccessMessageDto, string>> DeleteMessageAsync(int id, string username)
+    {
+        var message = await _messageRepository.GetMessageAsync(id);
+
+        if (message.SenderUsername != username && message.RecipientUsername != username)
+        {
+            return Result.Failure<SuccessMessageDto, string>("Not allowed!");
+        }
+
+        if (message.SenderUsername == username) message.SenderDeleted = true;
+        if (message.RecipientUsername == username) message.RecipientDeleted = true;
+
+        if (message.RecipientDeleted && message.SenderDeleted)
+        {
+            _messageRepository.DeleteMessage(message);
+        }
+
+        if(!await _messageRepository.SaveAllAsync())
+        {
+            return Result.Failure<SuccessMessageDto, string>("Failed to save changes!");
+        }
+
+        return Result.Success<SuccessMessageDto,string>(new SuccessMessageDto{Message = "Message successfully deleted."});
     }
 }
