@@ -35,7 +35,7 @@ public class MessageService : IMessageService
 
         if(recipient.VerificationStatus != EVerificationStatus.ACCEPTED || recipient.IsBlocked)
         {
-            
+            return Result.Failure<MessageDto, string>("Recipient does not exist!");
         }
 
         if(username == createMessageDto.RecipientUsername)

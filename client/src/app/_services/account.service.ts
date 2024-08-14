@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap } from
 import { environment } from 'src/environments/environment';
 import { Token } from '../_models/token';
 import { User } from '../_models/user';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AccountService {
   currentUser$ = this.currUserSource.asObservable();
   token: string | null = null;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private presenceService: PresenceService) {
    }
 
   login(model: any) {
@@ -34,7 +35,7 @@ export class AccountService {
         }
         return of(null);
       }),
-      tap(user => {
+      tap(user => {  
         this.currUserSource.next(user);
       })
     );
@@ -113,6 +114,7 @@ export class AccountService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 
   editProfile(model: any): Observable<string>{
@@ -141,6 +143,8 @@ export class AccountService {
       }
     }
     this.currUserSource.next(user);
+    if (this.token)
+      this.presenceService.createHubConnection(this.token);
   }
   
   getDecodedToken(token: string) {
@@ -154,18 +158,18 @@ export class AccountService {
     });
   }
 
-  private getAuthToken(): string | null {
-      const tokenString = localStorage.getItem('token');
-      if (tokenString) {
-        const tokenObject = JSON.parse(tokenString);
-        return tokenObject.token;
-      }
-      return null;
+  getAuthToken(): string | null {
+    const tokenString = localStorage.getItem('token');
+    if (tokenString) {
+      const tokenObject = JSON.parse(tokenString);
+      return tokenObject.token;
     }
+    return null;
+  }
 
-   getUserProfile(): Observable<User | null> {
+  getUserProfile(): Observable<User | null> {
     const headers = this.getAuthHeaders()
-    return this.http.get<User>(this.baseUrl + 'account', { headers }).pipe(
+    return this.http.get<User>(this.baseUrl + 'account', {headers}).pipe(
       catchError(error => {
         console.error('Error fetching user profile:', error);
         return of(null);

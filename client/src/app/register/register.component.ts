@@ -1,10 +1,10 @@
 import { Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
 import { AccountService } from '../_services/account.service';
-import { User } from '../_models/user';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidators } from '../_validators/custom-validators';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment.development';
 
 declare const google: any;
 
@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   validationErrors: string[] | undefined;
   selectedFile: File | null = null;
   googleToken: string | null = null;
+  clientId = environment.clientId; 
 
   constructor(private accountService: AccountService, 
     private router: Router, 
@@ -31,7 +32,7 @@ export class RegisterComponent implements OnInit {
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 16);
 
     google.accounts.id.initialize({
-      client_id: '1004079564257-u861m67mkdlcoqar7drc1hflub6oevpc.apps.googleusercontent.com',
+      client_id: this.clientId,
       callback: (response: any) => this.handleCredentialResponse(response)
     });
     google.accounts.id.renderButton(
