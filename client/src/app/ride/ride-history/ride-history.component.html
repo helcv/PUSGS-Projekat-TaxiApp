@@ -42,6 +42,10 @@
               <h5 class="card-title">Travel Mate:</h5>
               <p>{{ ride?.username }}</p>
               <hr>
+              <button type="button" class="btn btn-primary d-block mb-3 w-100" [routerLink]="['/messages/thread/' + ride.username]" >
+                <span class="mr-2">Send message </span>
+                <i class="fa fa-envelope ms-3" aria-hidden="true"></i>
+              </button>
             </div>
           </div>
         </div>

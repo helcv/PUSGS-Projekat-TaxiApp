@@ -25,7 +25,6 @@ public class AccountController : BaseApiController
         if (result.IsFailure) return BadRequest(result.Error);
         
         return Ok(result.Value);
-
     }
 
     [HttpPost("register")]
