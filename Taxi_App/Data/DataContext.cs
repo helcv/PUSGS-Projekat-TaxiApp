@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Taxi_App.Models;
 
 namespace Taxi_App;
 
@@ -17,6 +18,8 @@ public class DataContext : IdentityDbContext<User, AppRole, int,
     public DbSet<Ride> Rides { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<Connection> Connections { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

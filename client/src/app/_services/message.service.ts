@@ -33,7 +33,6 @@ export class MessageService {
       .catch(err => console.error('Error while starting connection: ' + err));
 
       this.hubConnection.on('ReceiveMessageThread', (messages: Message[]) => {
-        console.log('Received messages from SignalR:', messages);
         this.messageThreadSource.next(messages);
       });
 

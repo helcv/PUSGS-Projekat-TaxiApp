@@ -14,10 +14,6 @@
     max-height: 50px;
 }
 
-.message-container {
-    overflow-y: auto;
-}
-
 @media screen and (max-width: 768px) {
     .message-container {
         max-height: 60vh;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { take } from 'rxjs';
 import { User } from '../_models/user';
@@ -10,13 +10,13 @@ import { ToastrService } from 'ngx-toastr';
 import { PresenceService } from '../_services/presence.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-message-thread',
   templateUrl: './message-thread.component.html',
   styleUrls: ['./message-thread.component.css']
 })
-export class MessageThreadComponent implements OnInit, OnDestroy, AfterViewInit{
+export class MessageThreadComponent implements OnInit, OnDestroy{
   @ViewChild('messageForm', { static: false }) messageForm!: NgForm;
-  @ViewChild('messageContainer') messageContainer?: ElementRef;
   user: User | null = null;
   messages: Message[] = [];
   username: string = '';
@@ -49,10 +49,6 @@ export class MessageThreadComponent implements OnInit, OnDestroy, AfterViewInit{
     this.messageService.stopHubConnection();
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => this.scrollToBottom(), 0);
-  }
-
   loadMessages() {
     if (this.user && this.username) {
       this.messageService.getMessageThread(this.username).subscribe({
@@ -72,16 +68,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy, AfterViewInit{
     if (!this.username) return;
     this.messageService.sendMessage(this.username, this.messageContent).then(() => {
       this.messageForm?.reset();
-      setTimeout(() => this.scrollToBottom(), 0);
     })
   } 
 
-  scrollToBottom(): void {
-    if (this.messageContainer)
-    try {
-        this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
-    } catch(err) {}
-  }
 
   storePhoto(): void {
     this.messageService.messageThread$.subscribe(messages => {

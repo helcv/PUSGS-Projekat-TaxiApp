@@ -101,6 +101,7 @@ try
     var userManager = services.GetService<UserManager<User>>();
     var roleManager = services.GetService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
+    await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]");
     await Seed.SeedUsers(userManager, roleManager);
 }
 
