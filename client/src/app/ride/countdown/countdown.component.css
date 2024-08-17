@@ -1,0 +1,44 @@
+.time-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .time-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 2rem; 
+  }
+  
+  .modal-footer .btn {
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+  }
+  
+
+  .btn-close {
+    background-color: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: white;
+    opacity: 0.8;
+  }
+
+  .btn-close:hover {
+    opacity: 1;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+

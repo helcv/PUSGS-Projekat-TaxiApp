@@ -122,6 +122,11 @@ export class AccountService {
     return this.http.put<string>(this.baseUrl + 'account', model, {headers})
    }
 
+  changePassword(model: any): Observable<string>{
+    const headers = this.getAuthHeaders();
+    return this.http.put<string>(this.baseUrl + 'account/password', model, {headers})
+   }
+
   setCurrentUser(user: User) {
     const tokenString = localStorage.getItem('token');
     if (tokenString) {

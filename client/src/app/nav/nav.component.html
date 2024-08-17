@@ -32,7 +32,7 @@
       </ul>
 
       <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-        <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{user.username | titlecase}}</a>
+        <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome <strong>{{user.username}}</strong></a>
         <div class="dropdown-menu" *dropdownMenu>
           <a *appHasRole="['User', 'Driver', 'Admin']" routerLink="profile/edit" class="dropdown-item">Edit profile</a>
           <a class="dropdown-item" (click)="logout()">Logout</a>
@@ -46,15 +46,17 @@
               class="form-control me-2" 
               type="text" 
               placeholder="Email"
-              autocomplete="off">
+              autocomplete="off"
+              required>
           <input
               name="password"
               [(ngModel)]="model.password"  
               class="form-control me-2" 
               type="password" 
               placeholder="Password"
-              autocomplete="off">
-        <button class="btn btn-primary" type="submit">Login</button>
+              autocomplete="off"
+              required>
+        <button class="btn btn-primary w-50" type="submit" [disabled]="!model.email || !model.password">Login</button>
       </form>
     </div>
   </div>

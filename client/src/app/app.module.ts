@@ -32,6 +32,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TimeagoModule } from 'ngx-timeago';
 import { MessageThreadComponent } from './message-thread/message-thread.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { MessageThreadComponent } from './message-thread/message-thread.componen
     GoogleRegisterComponent,
     MessagesComponent,
     MessageThreadComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

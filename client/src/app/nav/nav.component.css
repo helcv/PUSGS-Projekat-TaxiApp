@@ -10,3 +10,7 @@ img {
 .custom-bg {
     background-color: #343A40;
   }
+
+  .btn-primary {
+    height: auto;
+  }

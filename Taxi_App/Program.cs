@@ -1,8 +1,5 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Taxi_App;
 using Taxi_App.Extensions;
 using Taxi_App.Middleware;

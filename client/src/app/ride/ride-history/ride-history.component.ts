@@ -20,7 +20,6 @@ export class RideHistoryComponent implements OnInit {
     private accountService: AccountService) {}
 
   ngOnInit(): void {
-    //this.loadUserProfile()
     this.accountService.currentUser$.subscribe(user => {
       this.user = user;
     });
@@ -46,18 +45,4 @@ export class RideHistoryComponent implements OnInit {
     }
   }
 
-  /* loadUserProfile(): void {
-    if(this.user)
-    this.accountService.getUserProfileById(this.user?.id).subscribe({
-      next: (user: User | null) => {
-        this.user = user;
-        if (this.user)
-          this.accountService.setCurrentUser(this.user)
-        localStorage.setItem('user', JSON.stringify(user));
-      },
-      error: (error) => {
-        console.error('Error fetching user profile:', error);
-      }
-    });
-  } */
 }

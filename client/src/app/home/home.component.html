@@ -1,23 +1,30 @@
-<div class="container mt-5">
-  <div *ngIf="!registerMode" class="row">
-    <div class="col-md-6">
-      <h1>Welcome to Ride Flow</h1>
-      <p>Wherever you need to go, we'll get you there safely and comfortably.</p>
-      <p>Our drivers are experienced and reliable, ensuring you have a smooth journey every time.</p>
-      <p>Book a ride now and experience the convenience of our service!</p>
-      <button class="btn btn-primary mt-3" (click)="registerToggle()">Book a Ride</button>
-    </div>
-    <div class="col-md-6">
-      <img src="/assets/taxi_app1.png" alt="Taxi" class="img-fluid rounded">
+<div class="landing-page-container mt-5">
+  <div *ngIf="!registerMode" class="row align-items-center">
+    <div class="col-md-8">
+      <h1>Welcome to <span class="brand-name">RideFlow</span></h1>
+      <p class="lead">Your journey starts here. Experience comfort, safety, and reliability with every ride.</p>
+      <p class="description">Whether you're heading to work, the airport, or a night out, our professional drivers are ready to take you there.</p>
+      <button class="btn btn-primary mt-4" (click)="registerToggle()">Book a Ride</button>
+
+      <div class="gallery mt-5">
+        <div class="row">
+          <div class="col-12 col-md-4 mb-2">
+            <img src="/assets/photo1.png" alt="RideFlow Experience" class="img-fluid rounded shadow">
+          </div>
+          <div class="col-12 col-md-4 mb-2">
+            <img src="/assets/photo2.png" alt="Comfortable Ride" class="img-fluid rounded shadow">
+          </div>
+          <div class="col-12 col-md-4 mb-2">
+            <img src="/assets/photo3.png" alt="Safe Journey" class="img-fluid rounded shadow">
+          </div>
+        </div>
+      </div>      
     </div>
   </div>
 
-  <div *ngIf="registerMode" class="container">
-    <div class="row justify-content-center">
-        <div class="col-4">
-            <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
-        </div>
+  <div *ngIf="registerMode" class="row justify-content-center">
+    <div class="">
+      <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
     </div>
   </div>
 </div>
-

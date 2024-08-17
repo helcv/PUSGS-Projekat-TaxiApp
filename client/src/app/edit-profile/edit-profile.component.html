@@ -7,7 +7,7 @@
       <div *ngIf="editProfileForm.dirty" class="alert alert-info">
         <p><strong>Information:</strong> You have made changes. Any unsaved changes will be lost.</p>
       </div>
-      <form *ngIf="user" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+      <form *ngIf="user" [formGroup]="editProfileForm" (ngSubmit)="onSubmitProfile()">
         <label class="mt-2">Name:</label>
         <input type="text" 
                name="name" 
@@ -29,6 +29,56 @@
         <button type="submit" 
           class="btn btn-success col-12 mt-3" 
           [disabled]="!editProfileForm.dirty">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card profile-card mt-4">
+    <div class="card-header text-white custom-bg">
+      <h4>Change Password</h4>
+    </div>
+    <div class="card-body">
+      <div *ngIf="changePasswordForm.dirty" class="alert alert-info">
+        <p><strong>Information:</strong> You have made changes. Any unsaved changes will be lost.</p>
+      </div>
+      <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmitPassword()">
+        <label class="mt-2">Old Password:</label>
+        <input type="password" 
+               name="oldPassword" 
+               class="form-control" 
+               formControlName="oldPassword"
+               required>
+        
+        <label class="mt-2">New Password:</label>
+        <input type="password" 
+               name="newPassword" 
+               class="form-control" 
+               formControlName="newPassword"
+               required
+               [ngClass]="{'is-invalid': changePasswordForm.get('newPassword')?.touched && changePasswordForm.get('newPassword')?.invalid}">
+        <div *ngIf="changePasswordForm.get('newPassword')?.touched && changePasswordForm.get('newPassword')?.invalid" class="invalid-feedback">
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">Password is required.</div>
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 6 characters long.</div>
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['maxlength']">Password cannot be more than 15 characters long.</div>
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['uppercase']">Password must have at least one uppercase letter (A-Z).</div>
+          <div *ngIf="changePasswordForm.get('newPassword')?.errors?.['number']">Password must have at least one digit (0-9).</div>
+        </div>
+      
+        <label class="mt-2">Confirm New Password:</label>
+        <input type="password" 
+               name="confirmPassword" 
+               class="form-control" 
+               formControlName="confirmPassword"
+               required
+               [ngClass]="{'is-invalid': changePasswordForm.get('confirmPassword')?.touched && (changePasswordForm.get('confirmPassword')?.invalid || changePasswordForm.hasError('mismatch'))}">
+        <div *ngIf="changePasswordForm.get('confirmPassword')?.touched && (changePasswordForm.get('confirmPassword')?.invalid || changePasswordForm.hasError('mismatch'))" class="invalid-feedback">
+          <div *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['required']">Please confirm your password.</div>
+          <div *ngIf="changePasswordForm.hasError('mismatch')">Passwords do not match.</div>
+        </div>
+      
+        <button type="submit" 
+          class="btn btn-success col-12 mt-3" 
+          [disabled]="!changePasswordForm.dirty || !changePasswordForm.valid">Change Password</button>
       </form>
     </div>
   </div>

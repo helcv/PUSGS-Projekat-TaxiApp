@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Taxi_App;
+using Taxi_App.DTOs;
 
 public class AccountController : BaseApiController
 {
@@ -80,6 +81,19 @@ public class AccountController : BaseApiController
         var currUsername = currUser.GetUsername();
 
         var result = await _accountService.UpdateAsync(currUsername, userUpdateDto);
+        if (result.IsFailure) return BadRequest(result.Error);
+        
+        return Ok(result.Value);
+    }
+
+    [HttpPut("password")]
+    [Authorize]
+    public async Task<ActionResult> UpdateUserPassword(PasswordUpdateDto passwordUpdateDto)
+    {
+        var currUser = _contextAccessor.HttpContext.User;
+        var currUsername = currUser.GetUsername();
+
+        var result = await _accountService.UpdatePasswordAsync(currUsername, passwordUpdateDto);
         if (result.IsFailure) return BadRequest(result.Error);
         
         return Ok(result.Value);

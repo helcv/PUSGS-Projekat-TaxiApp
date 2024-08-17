@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Taxi_App.DTOs;
 
 namespace Taxi_App;
 
@@ -242,6 +243,37 @@ public class AccountService : IAccountService
 
         return Result.Success<SuccessMessageDto, IEnumerable<string>>(new SuccessMessageDto { Message = "User verification successfully updated."});
     }
+
+     public async Task<Result<SuccessMessageDto, IEnumerable<string>>> UpdatePasswordAsync(string username, PasswordUpdateDto passwordUpdateDto)
+     {
+        var errMessages = new List<string>();
+        var user = await _userManager.FindByNameAsync(username);
+
+        if (user.VerificationStatus != EVerificationStatus.ACCEPTED)
+        {
+            errMessages.Add("You are not verified");
+            return Result.Failure<SuccessMessageDto, IEnumerable<string>>(errMessages);
+        }
+        if (user.IsBlocked == true)
+        {
+            errMessages.Add("You are blocked");
+            return Result.Failure<SuccessMessageDto, IEnumerable<string>>(errMessages);
+        }
+        if (user == null) 
+        {
+            errMessages.Add("User does not exist");
+            return Result.Failure<SuccessMessageDto, IEnumerable<string>>(errMessages);
+        }
+
+        var updateResult = await _userManager.ChangePasswordAsync(user, passwordUpdateDto.OldPassword, passwordUpdateDto.NewPassword);
+        if (!updateResult.Succeeded)
+        {
+            errMessages.AddRange(updateResult.Errors.Select(error => error.Description));
+            return Result.Failure<SuccessMessageDto, IEnumerable<string>>(errMessages);
+        }
+
+        return Result.Success<SuccessMessageDto, IEnumerable<string>>(new SuccessMessageDto { Message = "User password successfully updated!"} );
+     }
 
     public async Task<Result<UserDto, string>> GetProfileAsync(int id)
     {

@@ -2,13 +2,13 @@
     <h1 class="text-center">Order a ride</h1>
     <form [formGroup]="rideForm" autocomplete="off" (ngSubmit)="createRide()">
         <div class="form-group container">
-            <label for="start">Start:</label>
+            <label for="start">Start address:</label>
             <input #startInput 
                 formControlName="startAddress"
                 (change)="onDropdownSelect('startAddress', $event)" 
                 type="text" 
-                placeholder="Enter start Location"
-                class="form-control"
+                placeholder="Enter start address"
+                class="form-control mt-2"
                 [class.is-invalid]="rideForm.controls['startAddress'].touched && rideForm.controls['startAddress'].invalid">
             <div
                 *ngIf="rideForm.controls['startAddress'].invalid && (rideForm.controls['startAddress'].dirty || rideForm.controls['startAddress'].touched)">
@@ -22,13 +22,13 @@
             </div>
         </div>
         <div class="form-group container mt-3">
-            <label for="finish">Finish:</label>
+            <label for="finish">Final address:</label>
             <input #finishInput 
                 formControlName="finalAddress"
                 (change)="onDropdownSelect('finalAddress', $event)" 
                 type="text" 
-                placeholder="Enter final destination"
-                class="form-control"
+                placeholder="Enter final address"
+                class="form-control mt-2"
                 [class.is-invalid]="rideForm.controls['finalAddress'].touched && rideForm.controls['finalAddress'].invalid">
             <div
                 *ngIf="rideForm.controls['finalAddress'].invalid && (rideForm.controls['finalAddress'].dirty || rideForm.controls['finalAddress'].touched)">
@@ -37,7 +37,7 @@
                 </div>
                 <div *ngIf="rideForm.controls['finalAddress'].errors?.['invalidInput']"
                     class="invalid-feedback d-block">
-                    Start address must be in format Street Name Street Number, City, Country.
+                    Final address must be in format Street Name Street Number, City, Country.
                 </div>           
             </div>
         </div>
