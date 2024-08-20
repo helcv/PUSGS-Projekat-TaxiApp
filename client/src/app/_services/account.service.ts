@@ -140,7 +140,6 @@ export class AccountService {
   
     if (this.token) {
       const roles = this.getDecodedToken(this.token).role;
-      console.log(roles);
       if (Array.isArray(roles)) {
         user.roles = [...user.roles, ...roles];
       } else {

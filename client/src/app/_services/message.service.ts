@@ -54,7 +54,6 @@ export class MessageService {
     if (this.hubConnection) {
       this.hubConnection.stop().then(() => console.log('Connection ended'));
     }
-    
   }
 
   getMessages(container: string): Observable<Message[]>{

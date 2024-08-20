@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
-import { AccountService } from './account.service';
 import { BehaviorSubject, take } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -18,6 +17,8 @@ export class PresenceService {
   constructor(private toastr: ToastrService, private router: Router) { }
 
   createHubConnection(token: string) {
+    if(this.hubConnection) return;
+
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'presence', {
         accessTokenFactory: () => token

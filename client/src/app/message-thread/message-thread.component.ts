@@ -1,12 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { take } from 'rxjs';
 import { User } from '../_models/user';
 import { Message } from '../_models/message';
 import { MessageService } from '../_services/message.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { PresenceService } from '../_services/presence.service';
 
 @Component({
@@ -26,10 +25,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy{
   constructor(private accountService: AccountService, 
     public messageService: MessageService, 
     private route: ActivatedRoute,
-    private router: Router,
-    private toastr: ToastrService,
     public presenceService: PresenceService) {
-    
   }
 
   ngOnInit(): void {
@@ -49,28 +45,12 @@ export class MessageThreadComponent implements OnInit, OnDestroy{
     this.messageService.stopHubConnection();
   }
 
-  loadMessages() {
-    if (this.user && this.username) {
-      this.messageService.getMessageThread(this.username).subscribe({
-        next: messages => {
-          this.messages = messages
-          this.storePhoto();
-        },
-        error: err => {
-          this.toastr.error('Unable to load page')
-          this.router.navigateByUrl('/messages')
-        }
-      });
-    }
-  }
-
   sendMessage() {
     if (!this.username) return;
     this.messageService.sendMessage(this.username, this.messageContent).then(() => {
       this.messageForm?.reset();
     })
   } 
-
 
   storePhoto(): void {
     this.messageService.messageThread$.subscribe(messages => {

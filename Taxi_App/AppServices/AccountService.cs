@@ -2,7 +2,6 @@
 using CSharpFunctionalExtensions;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using Taxi_App.DTOs;
 
 namespace Taxi_App;

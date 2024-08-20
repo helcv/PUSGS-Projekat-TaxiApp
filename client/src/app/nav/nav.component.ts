@@ -32,7 +32,6 @@ export class NavComponent implements OnInit {
   login(form: NgForm) {
     this.accountService.login(this.model).subscribe({
       next: (response: any) => {
-        console.log(this.user?.busy);
         if (this.user?.busy)
           {
             this.router.navigateByUrl('/active');

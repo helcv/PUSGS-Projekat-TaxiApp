@@ -208,7 +208,7 @@ public class RideService : IRideService
         if (remainingTime < TimeSpan.Zero)
         {
             var currUser = await _userRepository.GetUserByIdAsync(ride.UserId);
-            var currDriver = new User();
+            User currDriver;
 
             //when times up allow user and driver to use app
             if(ride.DriverId.HasValue)
